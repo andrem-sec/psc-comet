@@ -1,0 +1,11 @@
+# Phase 8: continuous-learning-v2 dependencies
+# Minimal set, no external APIs required
+
+# JSON schema validation (instinct structure validation)
+jsonschema>=3.2.0
+
+# File system watching (optional, graceful if unavailable)
+watchdog>=2.1.0; sys_platform != 'win32'
+
+# No external dependencies (no requests, no numpy, no ML libs)
+# Keep it lightweight and offline-capable

@@ -1,0 +1,77 @@
+name: Validate Hooks
+
+on:
+  pull_request:
+    paths:
+      - '.claude/hooks/**'
+      - '.claude/settings.json'
+  push:
+    branches: [main]
+    paths:
+      - '.claude/hooks/**'
+      - '.claude/settings.json'
+
+jobs:
+  validate-hooks:
+    name: Validate Hook Scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check hooks are executable
+        run: |
+          echo "Checking hook scripts are executable..."
+          failed=0
+          for f in $(find .claude/hooks -name "*.sh"); do
+            if [ ! -x "$f" ]; then
+              echo "FAIL: $f is not executable"
+              failed=1
+            else
+              echo "OK: $f"
+            fi
+          done
+          if [ $failed -eq 1 ]; then exit 1; fi
+
+      - name: Shellcheck hook scripts
+        run: |
+          sudo apt-get install -y shellcheck -q
+          echo "Running shellcheck on hook scripts..."
+          failed=0
+          for f in $(find .claude/hooks -name "*.sh"); do
+            if ! shellcheck "$f"; then
+              failed=1
+            fi
+          done
+          if [ $failed -eq 1 ]; then exit 1; fi
+          echo "All hooks passed shellcheck."
+
+      - name: Validate settings.json structure
+        run: |
+          echo "Validating settings.json is valid JSON..."
+          if ! python3 -c "import json; json.load(open('.claude/settings.json'))"; then
+            echo "FAIL: settings.json is not valid JSON"
+            exit 1
+          fi
+          echo "PASS: settings.json is valid JSON"
+
+          echo "Checking all hook commands reference files that exist..."
+          python3 << 'EOF'
+          import json, os, sys
+          with open('.claude/settings.json') as f:
+              settings = json.load(f)
+
+          hooks = settings.get('hooks', {})
+          failed = False
+          for event, hook_groups in hooks.items():
+              for group in hook_groups:
+                  for hook in group.get('hooks', []):
+                      cmd = hook.get('command', '')
+                      if 'bash .claude/hooks/' in cmd:
+                          script = cmd.split('bash ')[-1].strip()
+                          if not os.path.exists(script):
+                              print(f"FAIL: Hook references non-existent script: {script}")
+                              failed = True
+          if failed:
+              sys.exit(1)
+          print("PASS: All hook script references are valid")
+          EOF

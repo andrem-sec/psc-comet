@@ -1,0 +1,32 @@
+# User Context
+
+This file is populated by the `start-here` command on first use and updated by the `wrap-up` skill at session end.
+
+## Profile
+
+- **Role:** [e.g., senior engineer, researcher, indie developer]
+- **Primary languages:** [e.g., Python, TypeScript, Go]
+- **Experience level:** [e.g., 10 years backend, new to frontend]
+- **Working style:** [e.g., prefers concise responses, likes to see reasoning]
+
+## Current Goals
+
+- [Primary objective for this project/period]
+- [Secondary objectives]
+
+## Preferences
+
+- **Response style:** [e.g., brief and direct, detailed explanations]
+- **Review depth:** [e.g., light touch, thorough critique]
+- **Commit style:** [e.g., atomic small commits, logical batches]
+
+## Active Projects
+
+- [Project name] — [brief description and current status]
+
+## Do Not
+
+- [Approaches or behaviors the user has asked Claude to avoid]
+
+---
+*Last updated: [session date]*

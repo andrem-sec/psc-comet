@@ -1,0 +1,178 @@
+{
+  "permissions": {
+    "allow": [],
+    "deny": []
+  },
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/block-destructive.sh",
+            "description": "Block destructive commands without confirmation"
+          }
+        ]
+      },
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/block-bypass-permissions.sh",
+            "description": "Block agent spawns with bypassPermissions or dontAsk mode"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/block-secrets-write.sh",
+            "description": "Block writes to credential files"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-config-protection.sh",
+            "description": "Block modifications to linter/formatter configs"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-edit-baseline.sh",
+            "description": "Capture shellcheck baseline before editing .sh files"
+          },
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/\\.claude\\//.test(p)){console.log(d);return}}catch{}console.log(d)})\"",
+            "description": "Override global hook: Allow all .claude/* infrastructure files (commands, agents, skills, registries)"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/warn-debug-output.sh",
+            "description": "Warn on debug output in source files"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/warn-ai-slop.sh",
+            "description": "Warn on AI slop color palette (violet/purple hex values and unanchored gradients)"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/warn-token-violation.sh",
+            "description": "Warn when raw hex values appear in component files instead of token references"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/warn-missing-alt.sh",
+            "description": "Warn on img elements missing alt attribute (WCAG 1.1.1)"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/warn-transition-all.sh",
+            "description": "Warn on transition: all (triggers layout recalculation)"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/warn-missing-reduced-motion.sh",
+            "description": "Warn when CSS animations exist without prefers-reduced-motion media query"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/warn-outline-none.sh",
+            "description": "Warn on outline: none without focus-visible replacement (WCAG 2.4.7)"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/attribution-snapshot.sh",
+            "description": "Record SHA-256 attribution snapshot after each file modification"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-edit-check.sh",
+            "description": "Warn if edit introduced new shellcheck findings in .sh files"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/preserve-on-compact.sh",
+            "description": "Remind to capture in-progress state before compaction"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-memory-precompact.sh",
+            "description": "Prompt to write session-memory.md before context is compacted"
+          }
+        ]
+      }
+    ],
+    "InstructionsLoaded": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-start.sh",
+            "description": "Validate context files are populated on session start"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-context-load.sh",
+            "description": "Scan memory files for adversarial injection patterns at session start"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/auto-review-on-stop.sh",
+            "description": "Surface modified files and remind to review before commit"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/telemetry-log.sh",
+            "description": "Log session outcome to local JSONL for retro skill"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/stop-cost-tracker.sh",
+            "description": "Log token/cost metrics (STUB - awaiting upstream enhancement)"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/stop-check-console-log.sh",
+            "description": "Scan modified files for debug output patterns"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/observe-instinct.sh",
+            "description": "Phase 8: Observe session for continuous learning"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/ember-gate.sh",
+            "description": "Check ember gates (time + session count) — write ember-due flag if both pass"
+          }
+        ]
+      }
+    ]
+  }
+}

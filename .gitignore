@@ -1,0 +1,46 @@
+# Environment and secrets
+.env
+.env.local
+.env.production
+.env.*.local
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code runtime (do not version these — they are session-specific)
+.claude/projects/
+.claude/sessions/
+.claude/statsig/
+.claude/todos/
+
+# Local telemetry and generated output — never commit
+.claude/context/telemetry/
+.claude/context/retros/
+.claude/context/benchmarks/
+.claude/context/canary/
+.claude/context/security-reports/
+.claude/context/design/
+
+# Session handoff — overwritten each session, personal to the user
+.claude/context/handoff.md
+
+# User context is personal — never commit populated user.md
+# user.md.template is tracked; user.md is local-only
+.claude/context/user.md
+
+# Session artifacts and development files (do not commit)
+SESSION_SUMMARY.md
+refining_anthropic.md
+test_phase*.sh
+.claude/settings.local.json

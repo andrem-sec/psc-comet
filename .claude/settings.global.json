@@ -1,0 +1,79 @@
+{
+  "_comment": "Template for global ~/.claude/settings.json placement. Hook paths use ~/.claude/hooks/ instead of .claude/hooks/. Copy this file to ~/.claude/settings.json when using Santa Claus as a global configuration.",
+  "permissions": {
+    "allow": [],
+    "deny": []
+  },
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/block-destructive.sh",
+            "description": "Block destructive commands without confirmation"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/block-secrets-write.sh",
+            "description": "Block writes to credential files"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/warn-debug-output.sh",
+            "description": "Warn on debug output in source files"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/preserve-on-compact.sh",
+            "description": "Remind to capture in-progress state before compaction"
+          }
+        ]
+      }
+    ],
+    "InstructionsLoaded": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/session-start.sh",
+            "description": "Validate context files are populated on session start"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/auto-review-on-stop.sh",
+            "description": "Surface modified files and remind to review before commit"
+          }
+        ]
+      }
+    ]
+  }
+}

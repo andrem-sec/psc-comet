@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# pre-commit hook — scans staged files for secrets using gitleaks.
+#
+# Install: cp git-hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+#
+# Requires gitleaks: https://github.com/gitleaks/gitleaks
+#   Kali/Debian: sudo apt install gitleaks
+#   macOS:       brew install gitleaks
+#
+# If gitleaks is not installed, this hook warns and allows the commit through.
+# Install gitleaks to enforce the scan.
+
+set -euo pipefail
+
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --redact
+else
+  echo "warning: gitleaks not found — staged secret scan skipped" >&2
+  echo "         install gitleaks to enforce: sudo apt install gitleaks" >&2
+fi

@@ -1,0 +1,113 @@
+name: Validate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate-skills:
+    name: Validate Skill Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check SKILL.md frontmatter
+        run: |
+          echo "Checking SKILL.md files for required frontmatter..."
+          failed=0
+          for f in $(find .claude/skills -name "SKILL.md"); do
+            if ! grep -q "^name:" "$f"; then
+              echo "FAIL: Missing 'name' in $f"
+              failed=1
+            fi
+            if ! grep -q "^description:" "$f"; then
+              echo "FAIL: Missing 'description' in $f"
+              failed=1
+            fi
+            if ! grep -q "^version:" "$f"; then
+              echo "FAIL: Missing 'version' in $f"
+              failed=1
+            fi
+            if ! grep -q "^triggers:" "$f"; then
+              echo "FAIL: Missing 'triggers' in $f"
+              failed=1
+            fi
+            if ! grep -q "^level:" "$f"; then
+              echo "FAIL: Missing 'level' in $f"
+              failed=1
+            fi
+          done
+          if [ $failed -eq 1 ]; then exit 1; fi
+          echo "All SKILL.md files valid."
+
+      - name: Check skills have mandatory checklists
+        run: |
+          echo "Checking SKILL.md files for mandatory checklists..."
+          failed=0
+          for f in $(find .claude/skills/core .claude/skills/workflow -name "SKILL.md" 2>/dev/null); do
+            if ! grep -q "## Mandatory Checklist" "$f"; then
+              echo "FAIL: Missing '## Mandatory Checklist' section in $f"
+              failed=1
+            fi
+          done
+          if [ $failed -eq 1 ]; then exit 1; fi
+          echo "All core/workflow skills have mandatory checklists."
+
+      - name: Check agent frontmatter
+        run: |
+          echo "Checking agent files for required frontmatter..."
+          failed=0
+          for f in $(find .claude/agents -name "*.md"); do
+            if ! grep -q "^name:" "$f"; then
+              echo "FAIL: Missing 'name' in $f"
+              failed=1
+            fi
+            if ! grep -q "^description:" "$f"; then
+              echo "FAIL: Missing 'description' in $f"
+              failed=1
+            fi
+            if ! grep -q "^tools:" "$f"; then
+              echo "FAIL: Missing 'tools' in $f"
+              failed=1
+            fi
+          done
+          if [ $failed -eq 1 ]; then exit 1; fi
+          echo "All agent files valid."
+
+  validate-claude-md:
+    name: Validate CLAUDE.md Line Count
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check CLAUDE.md line count
+        run: |
+          lines=$(wc -l < .claude/CLAUDE.md)
+          echo "CLAUDE.md: $lines lines"
+          if [ "$lines" -gt 200 ]; then
+            echo "FAIL: CLAUDE.md exceeds 200 lines ($lines). Trim it."
+            exit 1
+          fi
+          echo "PASS: CLAUDE.md within limit."
+
+  validate-no-secrets:
+    name: Check for Hardcoded Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan for secret patterns
+        run: |
+          echo "Scanning for potential hardcoded secrets..."
+          # Patterns that suggest hardcoded secrets
+          if grep -rE "(password|passwd|pwd)\s*=\s*['\"][^'\"]{4,}" .claude/ --include="*.md" --include="*.json" 2>/dev/null | grep -v "example\|placeholder\|your_\|<"; then
+            echo "FAIL: Potential hardcoded password found"
+            exit 1
+          fi
+          if grep -rE "(api_key|apikey|api-key)\s*[=:]\s*['\"][a-zA-Z0-9_\-]{10,}" .claude/ --include="*.md" --include="*.json" 2>/dev/null; then
+            echo "FAIL: Potential hardcoded API key found"
+            exit 1
+          fi
+          echo "PASS: No obvious secrets detected."

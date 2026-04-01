@@ -1,0 +1,108 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate before release
+        run: |
+          echo "Running pre-release validation..."
+
+          failed=0
+
+          # SKILL.md frontmatter
+          for f in $(find .claude/skills -name "SKILL.md"); do
+            for field in name description version triggers level; do
+              if ! grep -q "^${field}:" "$f"; then
+                echo "FAIL: Missing '$field' in $f"
+                failed=1
+              fi
+            done
+          done
+
+          # Mandatory checklists
+          for f in $(find .claude/skills/core .claude/skills/workflow -name "SKILL.md" 2>/dev/null); do
+            if ! grep -q "## Mandatory Checklist" "$f"; then
+              echo "FAIL: Missing checklist in $f"
+              failed=1
+            fi
+          done
+
+          # Agent frontmatter
+          for f in $(find .claude/agents -name "*.md"); do
+            for field in name description tools; do
+              if ! grep -q "^${field}:" "$f"; then
+                echo "FAIL: Missing '$field' in $f"
+                failed=1
+              fi
+            done
+          done
+
+          # CLAUDE.md line count
+          lines=$(wc -l < .claude/CLAUDE.md)
+          if [ "$lines" -gt 200 ]; then
+            echo "FAIL: CLAUDE.md is $lines lines (limit: 200)"
+            failed=1
+          fi
+
+          # Hook syntax
+          for f in .claude/hooks/*.sh; do
+            if ! bash -n "$f" 2>/dev/null; then
+              echo "FAIL: Syntax error in $f"
+              failed=1
+            fi
+          done
+
+          # settings.json validity
+          if ! python3 -m json.tool .claude/settings.json > /dev/null 2>&1; then
+            echo "FAIL: settings.json is not valid JSON"
+            failed=1
+          fi
+
+          if [ $failed -eq 1 ]; then
+            echo "Pre-release validation failed. Fix the issues above before releasing."
+            exit 1
+          fi
+
+          echo "All pre-release checks passed."
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Build release archive
+        run: |
+          zip -r "santa-claus-${{ steps.version.outputs.version }}.zip" \
+            .claude/ \
+            README.md \
+            LICENSE \
+            CHANGELOG.md \
+            CONTRIBUTING.md \
+            demo/
+
+      - name: Extract release notes from CHANGELOG
+        id: notes
+        run: |
+          # Extract the Unreleased section from CHANGELOG.md
+          awk '/^## \[Unreleased\]/{found=1; next} found && /^## \[/{exit} found{print}' CHANGELOG.md > release-notes.md
+          echo "Release notes extracted."
+          cat release-notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Santa Claus ${{ steps.version.outputs.version }}"
+          body_path: release-notes.md
+          files: "santa-claus-${{ steps.version.outputs.version }}.zip"
+          make_latest: true

@@ -11,8 +11,8 @@ No install. No API. Just copy and run.
 ## Quick Start
 
 ```bash
-git clone https://github.com/your-repo/project-santa-claus.git
-cd project-santa-claus
+git clone https://github.com/andrem-sec/psc-comet.git
+cd psc-comet
 
 # Project-level (this project only):
 cp -r .claude /path/to/your/project/
@@ -199,6 +199,7 @@ Built against 91+ sources including official Anthropic documentation, the Skills
 
 **Third-party sources incorporated under their respective licenses:**
 - [everything-claude-code](https://github.com/affaan-m/everything-claude-code) by Affaan Mustafa — MIT License. The `continuous-learning-v2` skill pattern is derived from this work.
+- [ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) by Next Level Builder — MIT License. The UI/UX design skill layer is derived from this work.
 
 ## Contributing
 

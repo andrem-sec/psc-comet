@@ -35,9 +35,9 @@ Thumbs.db
 # Session handoff — overwritten each session, personal to the user
 .claude/context/handoff.md
 
-# Ember gate runtime state — local only, never commit
-.claude/context/ember.lock
-.claude/context/ember.count
+# Ember gate — ember-due is a transient flag, never commit
+# ember.lock and ember.count ARE tracked (shipped initialized so fresh clones
+# start the gate timer at install time, not at Unix epoch)
 .claude/context/ember-due
 .claude/context/kairos.lock
 .claude/context/kairos.count

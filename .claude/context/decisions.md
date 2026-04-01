@@ -52,5 +52,33 @@ Constraint: Upstream Claude Code hook protocol
 
 Alternative: Deferred MCP-based cost tracking to Phase 2
 
+## [2026-03-31] ADR-006: Ember Gate Naming (replaces KAIROS)
+
+Status: ACTIVE
+
+Context: Original implementation used the internal Anthropic codename "KAIROS" for the dual-purpose mtime lock pattern (time gate + session gate). Project going public — using upstream internal names risks attribution confusion and trademark proximity.
+
+Decision: Rename all KAIROS references to "Ember gate" throughout the codebase. State files renamed: kairos.lock → ember.lock, kairos.count → ember.count, kairos-due → ember-due. Hook renamed: kairos-gate.sh → ember-gate.sh. Heartbeat skill section renamed. Similarly: Dream skill → Distill, Undercover mode → Public mode.
+
+Rationale: PSC is an independent project. Using Anthropic internal codenames on a public repo conflates PSC patterns with Anthropic internals. Renaming establishes clear PSC-native vocabulary.
+
+Consequences: All future documentation and skills reference Ember gate, Distill, and Public mode. Historical references in learnings.md/decisions.md retained for context.
+
+Confidence: High
+
+## [2026-03-31] ADR-007: Agent Memory Scoping
+
+Status: ACTIVE
+
+Context: Claude Code agents inherit the invoking session's memory context by default. For psc_comet, project-specific context (architecture, constraints, active decisions) should be available to subagents without requiring them to load user-scoped global memory.
+
+Decision: Add `memory_scope: project` to all 13 agent frontmatters. Scaffold `.claude/agent-memory/MEMORY.md` as the project-scoped memory index for agents.
+
+Rationale: Separating user memory (preferences, cross-project patterns) from project memory (architecture, constraints) prevents agents from acting on user-specific context that is irrelevant to a given project. Reduces noise in agent context.
+
+Consequences: Agents read `.claude/agent-memory/MEMORY.md` for project context. User preferences remain in `~/.claude/memory/`. Index maintained by the distill skill.
+
+Confidence: Medium
+
 ---
-*Updated: 2026-03-27 (ECC Phase 1 implementation)*
+*Updated: 2026-03-31*

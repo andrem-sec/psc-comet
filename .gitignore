@@ -35,6 +35,17 @@ Thumbs.db
 # Session handoff — overwritten each session, personal to the user
 .claude/context/handoff.md
 
+# Ember gate runtime state — local only, never commit
+.claude/context/ember.lock
+.claude/context/ember.count
+.claude/context/ember-due
+.claude/context/kairos.lock
+.claude/context/kairos.count
+.claude/context/kairos-due
+
+# Attribution log — local audit trail, not project state
+.claude/attribution.jsonl
+
 # User context is personal — never commit populated user.md
 # user.md.template is tracked; user.md is local-only
 .claude/context/user.md

@@ -1,0 +1,21 @@
+{
+  "name": "mcp-obsidian-psc",
+  "version": "1.0.0",
+  "description": "MCP server for Obsidian vault access via REST API and Omnisearch",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "setup": "node setup.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": ["**/tests/**/*.test.js"]
+  }
+}

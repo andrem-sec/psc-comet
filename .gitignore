@@ -55,3 +55,11 @@ SESSION_SUMMARY.md
 refining_anthropic.md
 test_phase*.sh
 .claude/settings.local.json
+
+# External skill repos — cloned locally by /install, never committed
+.claude/skills/ui-ux-pro-max-skill/
+.claude/skills/.venv/
+
+# MCP server dependencies — installed locally, never committed
+mcp-servers/*/node_modules/
+mcp-servers/*/.env

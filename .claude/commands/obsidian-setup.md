@@ -8,7 +8,7 @@ Run the interactive setup to connect Claude Code to your Obsidian vault.
 2. Installs MCP server dependencies
 3. Guides you through enabling the required Obsidian plugins
 4. Prompts for your Obsidian REST API key
-5. Writes `.env` and registers the MCP server in `~/.claude/settings.json`
+5. Writes `.env` and registers the MCP server
 6. Tests connections to Obsidian REST API and Omnisearch
 7. Tells you whether to restart Claude Code
 
@@ -25,10 +25,10 @@ Both must be installed and Obsidian must be running for the MCP tools to work.
 /obsidian-setup
 ```
 
-Claude will run:
+Claude will run `claude mcp add` to register the server, or run the interactive setup script:
 
 ```bash
-node C:/psc-comet-main/mcp-servers/obsidian/setup.js
+node mcp-servers/obsidian/setup.js
 ```
 
 ## After Setup
@@ -51,12 +51,24 @@ Safe to re-run at any time. Existing API key is preserved unless you paste a new
 
 ## Instructions for Claude
 
-When this command is invoked, run the setup script interactively:
+When this command is invoked on Linux, register the MCP server using `claude mcp add`:
 
 ```bash
-node C:/psc-comet-main/mcp-servers/obsidian/setup.js
+claude mcp add \
+  -e OBSIDIAN_API_KEY=<key from .env> \
+  -e OBSIDIAN_HOST=127.0.0.1 \
+  -e OBSIDIAN_PORT=27124 \
+  -e OMNISEARCH_PORT=51361 \
+  -e NODE_TLS_REJECT_UNAUTHORIZED=0 \
+  -- obsidian node <project_root>/mcp-servers/obsidian/src/index.js
 ```
 
-If the script cannot be found, tell the user to verify that `C:/psc-comet-main/mcp-servers/obsidian/` exists and contains `setup.js`.
+Note: on Linux, `mcpServers` in `~/.claude/settings.json` is NOT read by Claude Code. Use `claude mcp add` which writes to `~/.claude.json`. Verify with `claude mcp list`.
+
+For interactive first-time setup (API key configuration), run:
+
+```bash
+node mcp-servers/obsidian/setup.js
+```
 
 After the script completes, remind the user to restart Claude Code for the MCP server to load.

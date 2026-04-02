@@ -50,6 +50,9 @@ Thumbs.db
 # user.md.template is tracked; user.md is local-only
 .claude/context/user.md
 
+# Node.js dependencies
+node_modules/
+
 # Session artifacts and development files (do not commit)
 SESSION_SUMMARY.md
 refining_anthropic.md

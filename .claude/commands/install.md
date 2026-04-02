@@ -51,11 +51,11 @@ bash scripts/setup.sh --status
 When this command is invoked, run:
 
 ```bash
-bash C:/psc-comet-main/scripts/setup.sh --all
+bash scripts/setup.sh --all
 ```
 
 The `--all` flag runs all non-interactive components automatically. Components that require an interactive terminal (Obsidian MCP) will be skipped with a message telling the user how to run them manually.
 
 After it finishes, remind the user to restart Claude Code if any MCP servers or hooks were installed.
 
-If the script is not found, check that `C:/psc-comet-main/scripts/setup.sh` exists.
+If the script is not found, check that `scripts/setup.sh` exists in the project root.

@@ -83,6 +83,16 @@ Classify tests into two tiers:
 
 Do not put flaky or slow tests in the gate tier. Do not skip periodic tests because they are non-blocking — they are the early warning system.
 
+## Git and Push Rules
+
+Never push to GitHub automatically. A push requires an explicit instruction from the user in that session.
+
+Never sync files from the development environment to the git environment automatically. Wait for explicit instruction.
+
+Keep the development environment and git environment separate. All development happens locally first. The git environment is only touched when the user says to sync or push.
+
+This is a DevSecOps requirement: no unreviewed code reaches the remote.
+
 ## Commit Rules
 
 Use conventional commits: feat / fix / refactor / docs / test / chore

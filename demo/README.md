@@ -1,6 +1,6 @@
-# Demo — Santa Claus in Action
+# Demo — Santa Clause in Action
 
-This directory shows what Santa Claus produces after a real session. The files here are filled examples of the five context files and a sample session walkthrough.
+This directory shows what Santa Clause produces after a real session. The files here are filled examples of the five context files and a sample session walkthrough.
 
 Use these as references when filling in your own context files with `/start-here` or `/scan`.
 

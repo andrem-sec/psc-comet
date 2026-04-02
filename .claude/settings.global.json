@@ -1,5 +1,5 @@
 {
-  "_comment": "Template for global ~/.claude/settings.json placement. Hook paths use ~/.claude/hooks/ instead of .claude/hooks/. Copy this file to ~/.claude/settings.json when using Santa Claus as a global configuration.",
+  "_comment": "Template for global ~/.claude/settings.json placement. Hook paths use ~/.claude/hooks/ instead of .claude/hooks/. Copy this file to ~/.claude/settings.json when using Santa Clause as a global configuration.",
   "permissions": {
     "allow": [],
     "deny": []

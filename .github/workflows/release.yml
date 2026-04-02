@@ -102,7 +102,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: "Santa Claus ${{ steps.version.outputs.version }}"
+          name: "Santa Clause ${{ steps.version.outputs.version }}"
           body_path: release-notes.md
           files: "santa-claus-${{ steps.version.outputs.version }}.zip"
           make_latest: true

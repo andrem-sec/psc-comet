@@ -1,6 +1,6 @@
 # Contributing
 
-Project Santa Claus is **source-available**. The code is public and free to read, fork, and use under the MIT License. Active development is maintained by a closed circle of collaborators.
+Project Santa Clause is **source-available**. The code is public and free to read, fork, and use under the MIT License. Active development is maintained by a closed circle of collaborators.
 
 ## For Public Users
 

@@ -8,7 +8,7 @@ Run this protocol exactly. Do not skip steps. Do not ask all questions at once.
 ## Step 1 — Welcome
 
 Say:
-"Starting Santa Claus setup. I'll ask you a few questions one at a time, then write your answers to the context files. This takes about 2 minutes."
+"Starting Santa Clause setup. I'll ask you a few questions one at a time, then write your answers to the context files. This takes about 2 minutes."
 
 Then ask only this question and wait for the answer:
 

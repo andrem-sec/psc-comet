@@ -1,6 +1,6 @@
 # Cross-Platform Path Handling
 
-Project Santa Claus supports Windows, Linux, and macOS through automatic platform detection.
+Project Santa Clause supports Windows, Linux, and macOS through automatic platform detection.
 
 ## Platform Detection
 

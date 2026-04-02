@@ -1,4 +1,4 @@
-# Project Santa Claus
+# Project Santa Clause
 
 A portable Claude Code configuration suite. Drop `.claude/` into any project and Claude immediately knows how to work: what skills to use, when to plan, how to review code, which hooks enforce your standards automatically.
 
@@ -30,7 +30,7 @@ Open Claude Code and run `/heartbeat`. Done.
 
 Out of the box, Claude Code is capable but stateless. Every session starts from zero. It doesn't know your standards, your past decisions, or how you like to work.
 
-Santa Claus fixes that:
+Santa Clause fixes that:
 
 - **Skills encode how to work:** not just what to do, but when, in what order, and what to verify. A skill for code review means Claude runs the same structured checklist every time, not a different one each session.
 - **Hooks enforce your DevOps standards automatically:** shellcheck runs on every `.sh` edit. Secrets never get written. Debug output gets caught before it ships. Linter configs can't be silently weakened. No reminders, no manual gates. Enforced at the tool level on every action.

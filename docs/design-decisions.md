@@ -1,6 +1,6 @@
 # Design Decisions
 
-Research-backed rationale for Santa Claus architectural choices. Each decision links to the source(s) that validated it.
+Research-backed rationale for Santa Clause architectural choices. Each decision links to the source(s) that validated it.
 
 ---
 

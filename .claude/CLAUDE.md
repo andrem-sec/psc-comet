@@ -1,4 +1,4 @@
-# Santa Claus
+# Santa Clause
 
 A portable, research-backed Claude configuration suite.
 

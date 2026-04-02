@@ -9,6 +9,7 @@ const { OmnisearchClient } = require('./omnisearch');
 const config = {
   host: process.env.OBSIDIAN_HOST || '127.0.0.1',
   port: parseInt(process.env.OBSIDIAN_PORT || '27124', 10),
+  protocol: process.env.OBSIDIAN_PROTOCOL || 'https',
   apiKey: process.env.OBSIDIAN_API_KEY || '',
   omnisearchPort: parseInt(process.env.OMNISEARCH_PORT || '51361', 10)
 };

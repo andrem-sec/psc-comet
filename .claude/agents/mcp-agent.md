@@ -12,9 +12,6 @@ tools:
   - mcp__github__create_issue
   - mcp__github__list_issues
   - mcp__brave-search__brave_web_search
-  - mcp__obsidian__read_note
-  - mcp__obsidian__search_notes
-  - mcp__obsidian__list_notes_in_vault
 model: claude-sonnet-4-6
 permissionMode: dontAsk
 ---
@@ -69,11 +66,6 @@ Limitations: [anything that could not be completed and why]
 **Key tools:** `brave_web_search`
 **Setup:** requires `BRAVE_API_KEY` in environment.
 
-### obsidian (mcpvault)
-**Use for:** reading and searching the user's Obsidian vault — notes, references, prior research.
-**Key tools:** `read_note`, `search_notes`, `list_notes_in_vault`
-**Setup:** mcpvault (bitbonsai/mcpvault) configured with vault path. BM25 search available.
-
 ## MCP Setup Instructions
 
 Add servers to Claude Code's MCP configuration (`~/.claude/claude_desktop_config.json` or via `claude mcp add`):
@@ -95,10 +87,6 @@ Add servers to Claude Code's MCP configuration (`~/.claude/claude_desktop_config
       "args": ["-y", "@modelcontextprotocol/server-brave-search"],
       "env": { "BRAVE_API_KEY": "your_key_here" }
     },
-    "obsidian": {
-      "command": "npx",
-      "args": ["-y", "mcpvault", "--vault", "/path/to/obsidian/vault"]
-    }
   }
 }
 ```

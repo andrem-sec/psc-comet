@@ -1,8 +1,8 @@
 'use strict';
 
 class ObsidianClient {
-  constructor({ host = '127.0.0.1', port = 27124, apiKey }) {
-    this.baseUrl = `https://${host}:${port}`;
+  constructor({ host = '127.0.0.1', port = 27124, apiKey, protocol = 'https' }) {
+    this.baseUrl = `${protocol}://${host}:${port}`;
     this.apiKey = apiKey;
   }
 

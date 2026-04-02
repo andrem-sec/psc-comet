@@ -22,6 +22,8 @@ Do not add console.log, print, fmt.Print, or any debug output to production code
 
 Do not add emojis to code, comments, commit messages, or documentation.
 
+Name all created documents and notes using the format `YYYYMMDD - Title.ext` (e.g. `20260402 - Analysis.md`). No other naming formats.
+
 ## Planning Rules
 
 Enter plan mode before starting any task that affects 3 or more files, spans multiple domains, or touches security-sensitive code. Invoke the `plan-first` skill for the assessment and plan format.

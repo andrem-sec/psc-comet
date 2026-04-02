@@ -66,3 +66,6 @@ test_phase*.sh
 # MCP server dependencies — installed locally, never committed
 mcp-servers/*/node_modules/
 mcp-servers/*/.env
+
+# Node.js dependencies
+node_modules/

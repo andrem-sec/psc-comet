@@ -60,30 +60,19 @@ Do not spawn more than 4 agents in parallel. Beyond that, coordination overhead 
 
 ## Coordinator / Orchestrator Synthesis Rule
 
-The orchestrator synthesizes findings before delegating implementation. It never says "based on the researcher's findings, implement X" — this is lazy delegation that proves nothing was understood.
-
-Before spawning an implementation agent, the orchestrator must:
-1. Extract specific file paths and line numbers from research results
-2. Write a self-contained implementation spec (the worker can execute it without looking back)
-3. State the exact test or command that must pass to confirm the work is done
-
-Workers receive complete, standalone prompts. They have no access to the coordinator's conversation. Any worker prompt that references "the coordinator said" or "based on your findings" is malformed.
+Before spawning an implementation agent: extract specific file paths and line numbers, write a self-contained spec the worker can execute without looking back, and state the exact test or command that must pass. Worker prompts referencing "the coordinator said" or "based on your findings" are malformed — the orchestrator proves it understood by writing the spec itself.
 
 ## Skill Rules
 
-Skills must work without optional external dependencies. When an optional dependency (API key, CLI tool, external service) is present, unlock richer behavior. When absent, degrade gracefully and note what is unavailable. Never fail silently — always tell the user what was skipped and how to enable it.
-
-Example: `/benchmark` runs curl-based metrics for everyone. If `GOOGLE_API_KEY` is set, it also calls PageSpeed Insights. If not, it reports "Field data unavailable — set GOOGLE_API_KEY for real-user metrics."
+Skills must work without optional external dependencies. When an optional dependency is present, unlock richer behavior. When absent, degrade gracefully and tell the user what was skipped and how to enable it. Never fail silently.
 
 ## Testing Rules
 
 Classify tests into two tiers:
 
-**Gate** — runs on every PR, must pass before merge. Fast, deterministic, safety-critical. These block the pipeline.
+**Gate** — every PR, must pass before merge. Fast, deterministic, safety-critical.
 
-**Periodic** — runs on a weekly schedule, non-blocking. Slower, non-deterministic, or model-quality tests (e.g. "does Claude produce good output for this prompt"). These inform quality without gating shipping.
-
-Do not put flaky or slow tests in the gate tier. Do not skip periodic tests because they are non-blocking — they are the early warning system.
+**Periodic** — weekly schedule, non-blocking. Slow or non-deterministic tests (e.g. model-quality checks). Do not put flaky tests in Gate. Do not skip Periodic — it is the early warning system.
 
 ## Git and Push Rules
 
@@ -99,11 +88,7 @@ This is a DevSecOps requirement: no unreviewed code reaches the remote.
 
 Use conventional commits: feat / fix / refactor / docs / test / chore
 
-Add trailers to non-trivial commits:
-- `Constraint:` active constraint that shaped the decision
-- `Rejected:` alternative considered and why it was rejected
-- `Directive:` warning for future modifiers of this code
-- `Confidence:` high / medium / low
+Add trailers to non-trivial commits: `Constraint:` / `Rejected:` / `Directive:` / `Confidence:`
 
 Never commit to main directly. Use a feature branch with a PR.
 

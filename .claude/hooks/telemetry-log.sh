@@ -30,11 +30,16 @@ case "$STOP_REASON" in
 esac
 
 # Enrich: git branch and modified file count
-GIT_BRANCH="$(git -C "$ROOT_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "none")"
-MODIFIED_FILES="$(git -C "$ROOT_DIR" status --porcelain 2>/dev/null | wc -l | tr -d ' ')"
+if git -C "$ROOT_DIR" rev-parse --git-dir >/dev/null 2>&1; then
+    GIT_BRANCH="$(git -C "$ROOT_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "none")"
+    MODIFIED_FILES="$(git -C "$ROOT_DIR" status --porcelain 2>/dev/null | wc -l | tr -d ' ' || echo "0")"
+else
+    GIT_BRANCH="none"
+    MODIFIED_FILES="0"
+fi
 
 # Enrich: session duration from ember.lock mtime (seconds since last consolidation as proxy)
-EMBER_LOCK="$ROOT_DIR/.claude/context/ember.lock"
+EMBER_LOCK="$ROOT_DIR/context/ember.lock"
 if [[ -f "$EMBER_LOCK" ]]; then
   LOCK_MTIME="$(stat -c %Y "$EMBER_LOCK" 2>/dev/null || stat -f %m "$EMBER_LOCK" 2>/dev/null || echo "0")"
   NOW_S="$(date +%s)"

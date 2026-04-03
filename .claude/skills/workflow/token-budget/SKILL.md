@@ -70,6 +70,7 @@ PSC acts earlier:
 
 | Threshold | State | Action |
 |---|---|---|
+| ~60% | Recommended compact | Context quality degrades in the middle ("lost in the middle" effect) — compact at the next task boundary |
 | ~90% | Warning | Run /checkpoint immediately |
 | ~93% | Autocompact trigger | Claude Code may compact without warning |
 | ~95% | Blocking | New tool calls may be refused |

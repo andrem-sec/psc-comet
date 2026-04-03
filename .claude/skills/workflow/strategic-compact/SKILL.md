@@ -65,6 +65,7 @@ Integration with existing preserve-on-compact.sh hook: hook fires on /compact; t
 | Feature Complete → Testing | **YES** | Implementation done, testing is verification phase |
 | Bug Hunt in Progress | **NO** | Debugging requires full context (stack traces, state, prior attempts) |
 | After Successful PR Merge | **YES** | Work complete, next task starts clean |
+| Before stepping away (>5 min) | **YES** | Prompt cache expires after 5 minutes — returning cold reprocesses full context at full cost |
 
 **General Rule**: Compact at phase transitions where the prior phase's working context is no longer needed for the next phase.
 

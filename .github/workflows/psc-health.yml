@@ -1,0 +1,19 @@
+name: PSC Health Check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  psc-health:
+    name: PSC Harness Health Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run PSC health check
+        run: |
+          chmod +x scripts/psc-health-check.sh
+          bash scripts/psc-health-check.sh

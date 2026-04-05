@@ -75,6 +75,24 @@ Rejected: [alternative and why it was dropped]
 Confidence: high | medium | low
 ```
 
+### Running the health check
+
+The PSC harness has binary floor checks that block merge on failure. Run locally before opening a PR:
+
+```bash
+bash scripts/psc-health-check.sh
+```
+
+Exit 0 means all floors passed. Exit 1 means at least one failed -- fix all before pushing. The health check validates:
+
+- CLAUDE.md exists and is under 200 lines
+- settings.json is valid JSON
+- All hooks referenced in settings.json exist on disk
+- All agents and skills in the CLAUDE.md registry have files on disk
+- All agent and skill files have required frontmatter
+
+See `.claude/context/harness-spec.md` for the full specification and design rationale.
+
 ### Running CI locally
 
 ```bash

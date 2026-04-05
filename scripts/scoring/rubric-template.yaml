@@ -1,0 +1,25 @@
+# PSC Scoring Rubric -- deployer-configured
+#
+# SETUP
+# 1. Copy this file to scripts/scoring/rubric.yaml
+# 2. Fill in your own metric commands
+# 3. Set acknowledged: true after reading the risk section below
+# 4. rubric.yaml is gitignored by default -- do not commit your metrics
+#
+# RISK ACKNOWLEDGMENT
+# Automated scoring optimizes what you measure (Goodhart's Law).
+# A rising score does not mean harness quality is improving.
+# Hard floor failures (psc-health-check.sh) always score 0 regardless of rubric output.
+# Human review remains the final gate before merge.
+# Change acknowledged to true only after reading the above.
+acknowledged: false
+
+# DIMENSIONS
+# Each dimension runs one command. Exit 0 = pass. Non-zero = fail.
+# weight: relative importance (all weights are normalized to sum to 1.0).
+# PSC does not ship default metrics. You define what matters for your deployment.
+dimensions:
+  - name: example-dimension
+    description: "Replace with a specific, observable behavior you want to track"
+    command: "echo 'Replace with a command that exits 0 on pass, non-0 on fail'"
+    weight: 1.0

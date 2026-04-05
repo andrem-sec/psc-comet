@@ -63,6 +63,9 @@ test_phase*.sh
 .claude/skills/ui-ux-pro-max-skill/
 .claude/skills/.venv/
 
+# Scoring rubric -- deployer-managed, never committed
+scripts/scoring/rubric.yaml
+
 # MCP server dependencies — installed locally, never committed
 mcp-servers/*/node_modules/
 mcp-servers/*/.env

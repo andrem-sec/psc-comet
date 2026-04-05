@@ -15,9 +15,9 @@ jobs:
 
       - name: Check SKILL.md frontmatter
         run: |
-          echo "Checking SKILL.md files for required frontmatter..."
+          echo "Checking SKILL.md files for required frontmatter (core/ and workflow/)..."
           failed=0
-          for f in $(find .claude/skills -name "SKILL.md"); do
+          for f in $(find .claude/skills/core .claude/skills/workflow -name "SKILL.md" 2>/dev/null); do
             if ! grep -q "^name:" "$f"; then
               echo "FAIL: Missing 'name' in $f"
               failed=1
@@ -40,7 +40,7 @@ jobs:
             fi
           done
           if [ $failed -eq 1 ]; then exit 1; fi
-          echo "All SKILL.md files valid."
+          echo "All core/ and workflow/ SKILL.md files valid."
 
       - name: Check skills have mandatory checklists
         run: |

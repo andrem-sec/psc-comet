@@ -56,7 +56,7 @@ if grep -qE "linear-gradient\(135deg" "$FILE_PATH" 2>/dev/null; then
     FINDINGS="$FINDINGS\n  - Unanchored gradient: linear-gradient(135deg) — default angle, verify design intent"
 fi
 
-if grep -qP "linear-gradient\(to right.*#[789a-fA-F]" "$FILE_PATH" 2>/dev/null; then
+if grep -qE "linear-gradient\(to right.*#[789a-fA-F]" "$FILE_PATH" 2>/dev/null; then
     FINDINGS="$FINDINGS\n  - AI gradient pattern: linear-gradient(to right, purple-range) — check brand brief"
 fi
 

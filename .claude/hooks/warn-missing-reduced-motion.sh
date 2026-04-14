@@ -40,7 +40,6 @@ if [ "$HAS_REDUCED_MOTION" -gt 0 ]; then
 fi
 
 # Count animation-related declarations for context
-ANIM_COUNT="$HAS_ANIMATION"
 KEYFRAME_COUNT=$(grep -c "@keyframes" "$FILE_PATH" 2>/dev/null || echo 0)
 TRANSITION_COUNT=$(grep -c "transition:" "$FILE_PATH" 2>/dev/null || echo 0)
 

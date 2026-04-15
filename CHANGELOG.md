@@ -7,6 +7,27 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ---
 
+## [Unreleased]
+
+### Added
+- `/reflect` skill — instinct extraction extracted from wrap-up into a dedicated skill (trigger/action/domain quality gate, instinct-cli.py integration, graceful degradation)
+- Tag-based learnings MOC — `context/learnings-index.md` index + `context/learnings/[tag].md` per-tag files; replaces monolithic learnings.md load on every heartbeat
+- `context/handoff-template.md` — structured Part 1 (completed work) / Part 2 (open risks + next steps) handoff format
+- `/distill` command — 3-part process: compress learnings (merge near-duplicates, archive superseded), review instinct clusters (propose merges, not deletions), reset ember gate
+- `tests/test-learnings-structure.sh` — 35-assertion gate test covering handoff template, learnings MOC, reflect SKILL.md frontmatter, and command structure
+- Start-here tour (`commands/start-here.md`) — onboarding flow for new users
+- Vault governance phase to `commands/obsidian-setup.md`
+
+### Changed
+- `wrap-up` — routes learnings to tagged files via index; Step 5 is now an inline `/reflect` check
+- `heartbeat` — loads learnings-index.md MOC; surfaces ember-due flag when present
+- `observe-instinct.sh` — retired (stop hooks receive no conversation content; instinct extraction moved to wrap-up/reflect)
+- CLAUDE.md — skill registry updated (`learner` replaced by `reflect`); context files section documents learnings-index.md and `learnings/` directory
+- eval-harness SKILL.md — cross-platform fixes
+- Hook scripts — executable bits set; shellcheck warnings resolved
+
+---
+
 ## [1.0.0] — 2026-03-31
 
 Initial public release of the Comet branch.

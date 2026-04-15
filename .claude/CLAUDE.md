@@ -4,7 +4,7 @@ A portable, research-backed Claude configuration suite.
 
 ## Session Protocol
 
-Run `/heartbeat` at session start. Run `/wrap-up` at session end. Do not skip either.
+Run `/heartbeat` at session start. Run `/wrap-up` at session end. `/wrap-up` includes a `/reflect` check for instinct capture. Do not skip either.
 
 On any ambiguous request, run `intent-router` before starting work.
 
@@ -60,19 +60,30 @@ Do not spawn more than 4 agents in parallel. Beyond that, coordination overhead 
 
 ## Coordinator / Orchestrator Synthesis Rule
 
-Before spawning an implementation agent: extract specific file paths and line numbers, write a self-contained spec the worker can execute without looking back, and state the exact test or command that must pass. Worker prompts referencing "the coordinator said" or "based on your findings" are malformed — the orchestrator proves it understood by writing the spec itself.
+The orchestrator synthesizes findings before delegating implementation. It never says "based on the researcher's findings, implement X" — this is lazy delegation that proves nothing was understood.
+
+Before spawning an implementation agent, the orchestrator must:
+1. Extract specific file paths and line numbers from research results
+2. Write a self-contained implementation spec (the worker can execute it without looking back)
+3. State the exact test or command that must pass to confirm the work is done
+
+Workers receive complete, standalone prompts. They have no access to the coordinator's conversation. Any worker prompt that references "the coordinator said" or "based on your findings" is malformed.
 
 ## Skill Rules
 
-Skills must work without optional external dependencies. When an optional dependency is present, unlock richer behavior. When absent, degrade gracefully and tell the user what was skipped and how to enable it. Never fail silently.
+Skills must work without optional external dependencies. When an optional dependency (API key, CLI tool, external service) is present, unlock richer behavior. When absent, degrade gracefully and note what is unavailable. Never fail silently — always tell the user what was skipped and how to enable it.
+
+Example: `/benchmark` runs curl-based metrics for everyone. If `GOOGLE_API_KEY` is set, it also calls PageSpeed Insights. If not, it reports "Field data unavailable — set GOOGLE_API_KEY for real-user metrics."
 
 ## Testing Rules
 
 Classify tests into two tiers:
 
-**Gate** — every PR, must pass before merge. Fast, deterministic, safety-critical.
+**Gate** — runs on every PR, must pass before merge. Fast, deterministic, safety-critical. These block the pipeline.
 
-**Periodic** — weekly schedule, non-blocking. Slow or non-deterministic tests (e.g. model-quality checks). Do not put flaky tests in Gate. Do not skip Periodic — it is the early warning system.
+**Periodic** — runs on a weekly schedule, non-blocking. Slower, non-deterministic, or model-quality tests (e.g. "does Claude produce good output for this prompt"). These inform quality without gating shipping.
+
+Do not put flaky or slow tests in the gate tier. Do not skip periodic tests because they are non-blocking — they are the early warning system.
 
 ## Git and Push Rules
 
@@ -88,7 +99,11 @@ This is a DevSecOps requirement: no unreviewed code reaches the remote.
 
 Use conventional commits: feat / fix / refactor / docs / test / chore
 
-Add trailers to non-trivial commits: `Constraint:` / `Rejected:` / `Directive:` / `Confidence:`
+Add trailers to non-trivial commits:
+- `Constraint:` active constraint that shaped the decision
+- `Rejected:` alternative considered and why it was rejected
+- `Directive:` warning for future modifiers of this code
+- `Confidence:` high / medium / low
 
 Never commit to main directly. Use a feature branch with a PR.
 
@@ -99,7 +114,7 @@ Never commit to main directly. Use a feature branch with a PR.
 | heartbeat | 1 | session start |
 | wrap-up | 1 | session end |
 | lesson-gen | 1 | "extract pattern", "save this" |
-| learner | 2 | "add to skills", "capture this" |
+| reflect | 2 | inline from wrap-up, "any patterns this session?" |
 | remember | 1 | "remember this", `<remember>` |
 | prd | 3 | new feature, before implementation |
 | plan-first | 2 | 3+ files, cross-domain, security |
@@ -175,7 +190,7 @@ Never commit to main directly. Use a feature branch with a PR.
 
 - `context/user.md` — profile, preferences, working style
 - `context/project.md` — stack, architecture, constraints, current state
-- `context/learnings.md` — accumulated session learnings
+- `context/learnings.md` — main (always-loaded) learnings; `context/learnings-index.md` — tag MOC; `context/learnings/` — tagged files
 - `context/decisions.md` — architectural decision log
 - `context/security-standards.md` — project security requirements
 

@@ -10,6 +10,7 @@ PROJECT_ROOT="$(dirname "$CLAUDE_DIR")"
 
 # Source cross-platform utilities
 if [ -f "$PROJECT_ROOT/scripts/detect-platform.sh" ]; then
+    # shellcheck source=/dev/null
     source "$PROJECT_ROOT/scripts/detect-platform.sh"
     # Use normalized paths for cross-platform compatibility
     CLI_PATH="$(normalize_path "$PROJECT_ROOT/scripts/continuous-learning-v2/instinct-cli.py")"
@@ -19,7 +20,7 @@ else
 fi
 
 # Check if Python + Phase 8 available
-if ! PYTHON_CMD=$(bash "$PROJECT_ROOT/scripts/check-dependencies.sh" 2>/dev/null | grep PYTHON_CMD | cut -d= -f2); then
+if ! bash "$PROJECT_ROOT/scripts/check-dependencies.sh" 2>/dev/null | grep -q PYTHON_CMD; then
     # Python unavailable - silent exit (no-op)
     exit 0
 fi

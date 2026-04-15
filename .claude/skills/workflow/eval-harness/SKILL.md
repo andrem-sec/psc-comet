@@ -35,6 +35,17 @@ Without evals, Claude:
 
 Evals provide the missing feedback loop: concrete, reproducible, pass/fail measurement.
 
+## Before You Define Evals
+
+Run the feature or skill against real inputs first. Do not write test cases from imagination.
+
+1. Run it 10-20 times against realistic inputs -- varied, not cherry-picked
+2. Read every output. List what actually failed and why
+3. Bucket failures: prompt wording / tool design / model limitation / edge case not handled
+4. Write test cases from that list -- one case per observed failure mode
+
+If you have not observed any failures, your eval suite will confirm assumptions instead of catching bugs. Spend 60-80% of eval effort here before touching `/eval define`.
+
 ## Two Eval Types
 
 ### Capability Evals
@@ -91,6 +102,8 @@ Answer YES or NO with reasoning."
 **When to use**: Semantic correctness, intent matching, explanation quality.
 
 **Anti-pattern**: Using model graders without a clear rubric. Leads to flaky, inconsistent grades.
+
+**Grade outcomes, not exact paths.** An agent that reaches the correct result via a different route than expected should pass. Only fail a run when the *outcome* is wrong -- not when the sequence of steps differs. Brittle path-matching produces false failures that corrupt your eval data and make SHIP verdicts untrustworthy.
 
 **Cost awareness**: Model graders consume tokens. For high-volume evals, prefer code-based graders.
 
@@ -170,7 +183,9 @@ Generate syntactically valid SELECT queries from natural language.
 Create new eval file from template. Prompts for:
 - Type (Capability or Regression)
 - Success criteria (concrete, measurable)
-- Initial test cases (minimum 3)
+- Initial test cases (minimum 3, all manually verified)
+
+**Dataset quality over quantity.** Verify every test case manually before adding it -- read the input, trace the expected output yourself, confirm the grader logic is correct. 10 cases you have personally validated outperform 100 synthetic ones you have not checked. Unverified cases corrupt pass rates and make SHIP verdicts meaningless.
 
 ### /eval check <feature-name>
 

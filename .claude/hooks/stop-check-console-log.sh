@@ -95,7 +95,7 @@ print(json.dumps(patterns))
             patterns_json="["
             first=true
             for pattern in "${FOUND_PATTERNS[@]}"; do
-                escaped=$(echo "$pattern" | sed 's/"/\\"/g')
+                escaped="${pattern//\"/\\\"}"
                 if [ "$first" = true ]; then
                     patterns_json+="\"$escaped\""
                     first=false

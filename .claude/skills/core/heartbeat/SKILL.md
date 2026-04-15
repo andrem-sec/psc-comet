@@ -14,6 +14,7 @@ context_files:
   - context/user.md
   - context/project.md
   - context/learnings.md
+  - context/learnings-index.md
   - context/decisions.md
   - context/security-standards.md
 steps:

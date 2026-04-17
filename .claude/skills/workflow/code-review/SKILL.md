@@ -27,7 +27,7 @@ steps:
   - name: Security Pass
     description: Flag anything that warrants a full security-gate run (do not duplicate security-gate)
   - name: Verdict
-    description: APPROVE / REQUEST CHANGES / BLOCK — with specific, actionable feedback
+    description: APPROVE / REQUEST CHANGES / BLOCK — with specific, actionable feedback. Then write the current ISO timestamp to `.claude/context/.review-done` (signals stop-review-gate that review completed).
 ---
 
 # Code Review Skill
@@ -125,6 +125,39 @@ Impact: [what breaks or could break]
 Fix: [specific recommendation]
 Blocking: YES
 ```
+
+## Adversarial Mode (`/code-review --adversarial`)
+
+Standard mode asks: "What is wrong with this code?"
+Adversarial mode asks: "Why is this the wrong approach entirely?"
+
+Use adversarial mode when you want the implementation challenged, not just inspected. The output argues *against* the code. The user decides whether the argument holds.
+
+**Trigger:** user invokes with `--adversarial` flag or asks for adversarial review.
+
+**Questions to answer:**
+
+1. **Wrong abstraction?** Is the chosen abstraction level correct, or does it leak internals / hide too much?
+2. **Tests testing the right thing?** Are tests asserting behavior or implementation details? Would a rewrite break the tests even if behavior is preserved?
+3. **Over-engineered?** Is this solving a problem that doesn't exist yet? What is the simplest version that satisfies the actual requirement?
+4. **Hidden assumption?** What assumption does this code make that, if wrong, causes it to fail entirely?
+5. **Complete rewrite trigger?** What real-world scenario would force a complete rewrite of this approach?
+
+**Output format:**
+
+```
+ADVERSARIAL VERDICT: [ARGUMENT HOLDS / ARGUMENT WEAK]
+
+Challenge 1 — [abstraction / tests / complexity / assumption / fragility]:
+[Specific argument against the implementation]
+Evidence: [file:line]
+
+Challenge 2 — ...
+
+User decision required: Accept / Reject each challenge.
+```
+
+Do not produce both standard and adversarial output in the same run. They are separate passes.
 
 ## Anti-Patterns
 

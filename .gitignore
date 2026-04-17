@@ -35,6 +35,13 @@ Thumbs.db
 # Session handoff — overwritten each session, personal to the user
 .claude/context/handoff.md
 
+# Stop hook guard markers -- transient session state, never commit
+.claude/context/.wrapup-done
+.claude/context/.review-done
+# Stop hook opt-in flags -- personal preference, keep local
+.claude/context/.wrap-guard
+.claude/context/.review-gate
+
 # Ember gate — ember-due is a transient flag, never commit
 # ember.lock and ember.count ARE tracked (shipped initialized so fresh clones
 # start the gate timer at install time, not at Unix epoch)

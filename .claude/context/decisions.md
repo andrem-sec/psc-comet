@@ -52,19 +52,6 @@ Constraint: Upstream Claude Code hook protocol
 
 Alternative: Deferred MCP-based cost tracking to Phase 2
 
-## [2026-03-31] ADR-006: Ember Gate Naming (replaces KAIROS)
-
-Status: ACTIVE
-
-Context: Original implementation used the internal Anthropic codename "KAIROS" for the dual-purpose mtime lock pattern (time gate + session gate). Project going public — using upstream internal names risks attribution confusion and trademark proximity.
-
-Decision: Rename all KAIROS references to "Ember gate" throughout the codebase. State files renamed: kairos.lock → ember.lock, kairos.count → ember.count, kairos-due → ember-due. Hook renamed: kairos-gate.sh → ember-gate.sh. Heartbeat skill section renamed. Similarly: Dream skill → Distill, Undercover mode → Public mode.
-
-Rationale: PSC is an independent project. Using Anthropic internal codenames on a public repo conflates PSC patterns with Anthropic internals. Renaming establishes clear PSC-native vocabulary.
-
-Consequences: All future documentation and skills reference Ember gate, Distill, and Public mode. Historical references in learnings.md/decisions.md retained for context.
-
-Confidence: High
 
 ## [2026-03-31] ADR-007: Agent Memory Scoping
 

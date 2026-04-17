@@ -12,10 +12,10 @@ Out of the box, Claude Code resets every session. No memory of your standards, n
 
 PSC fixes the four gaps that matter most:
 
-- **No persistent memory:** learnings, decisions, and session state vanish at context reset. PSC carries them forward and compresses them with `/distill`.
-- **No enforcement:** "don't commit secrets" is just a suggestion unless a hook blocks the write. PSC hooks enforce your DevOps standards at the tool level, every action, automatically.
-- **No consistent process:** code review, security gates, and planning happen when you remember to ask. PSC skills run the same structured checklist every time, triggered by natural phrases.
-- **No agent discipline:** Claude invents a different workflow each session. PSC agents have defined roles, isolation levels, and constraints that hold across sessions.
+- **Persistent memory:** learnings, decisions, and session state vanish at context reset. PSC carries them forward and compresses them with `/distill`.
+- **Enforcement:** "don't commit secrets" is just a suggestion unless a hook blocks the write. PSC hooks enforce your DevOps standards at the tool level, every action, automatically.
+- **Consistent process:** code review, security gates, and planning happen when you remember to ask. PSC skills run the same structured checklist every time, triggered by natural phrases.
+- **Agent discipline:** Claude invents a different workflow each session. PSC agents have defined roles, isolation levels, and constraints that hold across sessions.
 
 ---
 

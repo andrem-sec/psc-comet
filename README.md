@@ -2,7 +2,7 @@
 
 A portable `.claude/` configuration suite that gives Claude Code persistent memory, enforced standards, and structured workflows across every project you work in.
 
-Already using Obsidian as your second brain? PSC connects Claude directly to your vault via the bundled MCP server — search your notes, pull context, and write back, all inside your coding sessions.
+Already using Obsidian as your second brain? PSC connects Claude directly to your vault via the bundled MCP server: search your notes, pull context, and write back, all inside your coding sessions.
 
 ---
 
@@ -12,10 +12,10 @@ Out of the box, Claude Code resets every session. No memory of your standards, n
 
 PSC fixes the four gaps that matter most:
 
-- **No persistent memory** — learnings, decisions, and session state vanish at context reset. PSC carries them forward and compresses them with `/distill`.
-- **No enforcement** — "don't commit secrets" is just a suggestion unless a hook blocks the write. PSC hooks enforce your DevOps standards at the tool level, every action, automatically.
-- **No consistent process** — code review, security gates, and planning happen when you remember to ask. PSC skills run the same structured checklist every time, triggered by natural phrases.
-- **No agent discipline** — Claude invents a different workflow each session. PSC agents have defined roles, isolation levels, and constraints that hold across sessions.
+- **No persistent memory:** learnings, decisions, and session state vanish at context reset. PSC carries them forward and compresses them with `/distill`.
+- **No enforcement:** "don't commit secrets" is just a suggestion unless a hook blocks the write. PSC hooks enforce your DevOps standards at the tool level, every action, automatically.
+- **No consistent process:** code review, security gates, and planning happen when you remember to ask. PSC skills run the same structured checklist every time, triggered by natural phrases.
+- **No agent discipline:** Claude invents a different workflow each session. PSC agents have defined roles, isolation levels, and constraints that hold across sessions.
 
 ---
 
@@ -38,19 +38,19 @@ No API keys required. No install scripts. Core features work on Windows, Linux, 
 
 ---
 
-## v1.2 — What's New
+## v1.2: What's New
 
 ### Reasoning Gates
 
-`/reasoning-gates` — before executing a complex task, Claude scans for branch points where a wrong choice is hard to undo: an irreversible migration, an architectural split, a security boundary. It presents candidates and you confirm which ones get a reasoning gate. At each confirmed gate, it enumerates options, states assumptions, and picks with explicit rationale before continuing. Unexpected branches mid-task surface as a flag rather than a silent guess.
+`/reasoning-gates`: before executing a complex task, Claude scans for branch points where a wrong choice is hard to undo: an irreversible migration, an architectural split, a security boundary. It presents candidates and you confirm which ones get a reasoning gate. At each confirmed gate, it enumerates options, states assumptions, and picks with explicit rationale before continuing. Unexpected branches mid-task surface as a flag rather than a silent guess.
 
 ### Adversarial Code Review
 
-`/code-review --adversarial` — instead of inspecting the implementation, the reviewer argues against it. Is this the right abstraction level? Are the tests testing behavior or implementation detail? What assumption would force a complete rewrite? The default `/code-review` behavior is unchanged. The adversarial flag is explicit.
+`/code-review --adversarial`: instead of inspecting the implementation, the reviewer argues against it. Is this the right abstraction level? Are the tests testing behavior or implementation detail? What assumption would force a complete rewrite? The default `/code-review` behavior is unchanged. The adversarial flag is explicit.
 
 ### Session Discipline Hooks (Opt-In)
 
-Two new Stop hooks that block the session from ending if required gates haven't run. `stop-wrap-guard` blocks if you have uncommitted changes and `/wrap-up` hasn't run. `stop-review-gate` blocks if source files were modified and `/code-review` hasn't run. Both are off by default — enable by creating `.claude/context/.wrap-guard` or `.claude/context/.review-gate`. Delete the file to disable.
+Two new Stop hooks that block the session from ending if required gates haven't run. `stop-wrap-guard` blocks if you have uncommitted changes and `/wrap-up` hasn't run. `stop-review-gate` blocks if source files were modified and `/code-review` hasn't run. Both are off by default. Enable by creating `.claude/context/.wrap-guard` or `.claude/context/.review-gate`. Delete the file to disable.
 
 ### Session Memory System (v1.1)
 
@@ -77,7 +77,7 @@ Two tiers: **Core** (always active) and **Workflow** (invoked by slash command o
 | `reflect` | 2 | Instinct extraction: trigger / action / domain quality gate, instinct-cli.py integration |
 | `distill` | 2 | Memory consolidation: compress learnings, review instinct clusters, reset ember gate |
 | `batch` | 3 | Parallel agent swarm with PR sentinel fan-in coordination |
-| `roe` | 3 | Rules of Engagement gate — required before any security operation or autonomous scan |
+| `roe` | 3 | Rules of Engagement gate, required before any security operation or autonomous scan |
 | `deep-research` | 3 | Multi-source research with citations and synthesis |
 | `continuous-learning-v2` | 3 | Instinct tracking with confidence scoring and evolution gates |
 
@@ -90,11 +90,11 @@ Full list in `.claude/skills/`. Levels: **1** = lightweight, **2** = standard, *
 | `researcher` | readonly | Research and synthesis |
 | `planner` | readonly | Phased implementation plans |
 | `architect` | readonly | System design, ADR generation |
-| `security-reviewer` | readonly+isolated | OWASP audit — never reviews code it wrote |
+| `security-reviewer` | readonly+isolated | OWASP audit; never reviews code it wrote |
 | `code-reviewer` | readonly+isolated | Semantic anti-pattern review |
 | `verifier` | readonly | Acceptance criteria verification |
 | `mcp-agent` | MCP-only | All MCP tool operations, isolated from main agent |
-| `orchestrator` | no-impl | Multi-agent mission coordination — synthesizes before delegating |
+| `orchestrator` | no-impl | Multi-agent mission coordination; synthesizes before delegating |
 | `docker-sandbox` | worktree-isolated | Autonomous security scanning |
 | `harness-optimizer` | readonly | Meta-agent for improving the PSC harness itself |
 | `ui-critic` | readonly | Visual design critique against reference brief |
@@ -105,15 +105,15 @@ Full list in `.claude/skills/`. Levels: **1** = lightweight, **2** = standard, *
 
 All hooks are shell scripts registered in `settings.json`. They run without prompting.
 
-**PreToolUse** — block-destructive · block-secrets-write · block-bypass-permissions · pre-config-protection · pre-edit-baseline
+**PreToolUse:** block-destructive · block-secrets-write · block-bypass-permissions · pre-config-protection · pre-edit-baseline
 
-**PostToolUse** — warn-debug-output · warn-ai-slop · warn-token-violation · warn-missing-alt · warn-transition-all · warn-missing-reduced-motion · warn-outline-none · attribution-snapshot · post-edit-check
+**PostToolUse:** warn-debug-output · warn-ai-slop · warn-token-violation · warn-missing-alt · warn-transition-all · warn-missing-reduced-motion · warn-outline-none · attribution-snapshot · post-edit-check
 
-**PreCompact** — preserve-on-compact · session-memory-precompact
+**PreCompact:** preserve-on-compact · session-memory-precompact
 
-**InstructionsLoaded** — session-start · pre-context-load (adversarial injection scan)
+**InstructionsLoaded:** session-start · pre-context-load (adversarial injection scan)
 
-**Stop** — auto-review-on-stop · telemetry-log · stop-cost-tracker · stop-check-console-log · observe-instinct · ember-gate · stop-wrap-guard · stop-review-gate
+**Stop:** auto-review-on-stop · telemetry-log · stop-cost-tracker · stop-check-console-log · observe-instinct · ember-gate · stop-wrap-guard · stop-review-gate
 
 ### Commands
 
@@ -133,9 +133,9 @@ All hooks are shell scripts registered in `settings.json`. They run without prom
 /install      /obsidian-setup /promote    /a11y-review
 ```
 
-### MCP Server — Obsidian (Second Brain Integration)
+### MCP Server: Obsidian (Second Brain Integration)
 
-If you use Obsidian as your second brain, PSC bridges it directly into your Claude sessions. The bundled `mcp-obsidian-psc` server exposes your vault as a live tool: search notes by keyword or semantic query, read full documents, list folders, append new content, and patch existing notes — all without leaving your coding session.
+If you use Obsidian as your second brain, PSC bridges it directly into your Claude sessions. The bundled `mcp-obsidian-psc` server exposes your vault as a live tool: search notes by keyword or semantic query, read full documents, list folders, append new content, and patch existing notes, all without leaving your coding session.
 
 Set up via `/obsidian-setup`. Requires the **Local REST API** and **Omnisearch** Obsidian plugins with Obsidian running. Source and tests in `mcp-servers/obsidian/`.
 
@@ -169,8 +169,8 @@ Fill these once with `/start-here` or `/scan`. Claude carries them forward acros
 |------|---------|-----------|
 | `context/user.md` | Your role, preferences, working style | `/start-here`, manually |
 | `context/project.md` | Stack, architecture, active constraints | `/scan`, manually |
-| `context/learnings.md` | Standing rules — always loaded | `/wrap-up` |
-| `context/learnings-index.md` | Tag map — loaded by heartbeat for navigation | `/wrap-up` |
+| `context/learnings.md` | Standing rules, always loaded | `/wrap-up` |
+| `context/learnings-index.md` | Tag map, loaded by heartbeat for navigation | `/wrap-up` |
 | `context/decisions.md` | Architectural decision log | `architect` agent, `plan-first` |
 | `context/security-standards.md` | Project security requirements | manually |
 
@@ -194,8 +194,8 @@ See [SECURITY.md](SECURITY.md) for the responsible disclosure policy.
 Built against 91+ sources including official Anthropic documentation, the SkillsBench empirical benchmark, and published research on long-running Claude sessions. Architectural decisions are documented with citations in `docs/design-decisions.md`.
 
 **Third-party sources incorporated under their respective licenses:**
-- [everything-claude-code](https://github.com/affaan-m/everything-claude-code) by Affaan Mustafa — MIT License. The `continuous-learning-v2` skill pattern is derived from this work.
-- [ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) by Next Level Builder — MIT License. The UI/UX design skill layer is derived from this work.
+- [everything-claude-code](https://github.com/affaan-m/everything-claude-code) by Affaan Mustafa (MIT License). The `continuous-learning-v2` skill pattern is derived from this work.
+- [ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) by Next Level Builder (MIT License). The UI/UX design skill layer is derived from this work.
 
 ---
 

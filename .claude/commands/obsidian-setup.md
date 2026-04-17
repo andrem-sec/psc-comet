@@ -48,6 +48,17 @@ You will have access to these tools:
 | `obsidian_append` | Append content to a note |
 | `obsidian_patch` | Insert content under a heading |
 
+## Optional: Book and Paper Library
+
+After setup completes, ask the user:
+"Do you have a PDF/EPUB book or paper library you want to import into Obsidian?"
+
+If yes, run the `library-pipeline` skill. It will ask for the library path and
+vault path, check dependencies, and run the conversion. No paths are hardcoded --
+the skill collects everything from the user at runtime.
+
+If no, skip silently.
+
 ---
 
 ## Instructions for Claude

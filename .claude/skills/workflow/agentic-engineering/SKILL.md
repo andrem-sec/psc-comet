@@ -135,6 +135,19 @@ Each work unit should be **independently verifiable in 15 minutes or less**.
 - Default to Sonnet; escalate to Opus only when needed
 - Use Haiku aggressively for preparatory work (classification, data gathering)
 
+**Per-role model assignment (multi-agent workflows):**
+
+In multi-agent workflows, assign models at the role level, not the session level:
+
+| Role | Model | Rationale |
+|------|-------|-----------|
+| Architect / Planner | Opus | High-complexity decomposition and tradeoff analysis |
+| Implementer | Sonnet | Default for most code tasks |
+| Reviewer / Verifier | Sonnet | Review needs reasoning, not raw speed |
+| Classifier / Fetcher | Haiku | Fast, cheap, deterministic lookups |
+
+A session-wide model does not override role-level assignments. An Architect agent uses Opus even if the session default is Sonnet.
+
 **Integration with model-router skill:**
 This skill provides task category definitions; model-router handles the actual routing logic. Reference model-router for cost calculation and fallback strategies.
 
@@ -257,6 +270,47 @@ RESULT: <json>         (non-PR workflows — domain-specific sentinel)
 The coordinator parses this sentinel to track completion. No shared state, no callbacks, crash-safe, restartable.
 
 **Rule:** Define the sentinel format in the worker's spawn prompt. Never rely on unstructured output for coordination signals.
+
+## Failure Handling in Multi-Agent Workflows
+
+### Cascading Failure
+
+When a task fails, all tasks that depend on its output are **blocked** -- not cancelled, not continued with incomplete input. They wait.
+
+Use the standard failure signal:
+```
+FAILED: <task_id> -- <reason>
+```
+
+**Example cascade:**
+- Task B depends on Task A's output
+- Task A fails: `FAILED: task-a -- API returned 500, no retry budget`
+- Task B status: BLOCKED (waiting on task-a)
+- Task C (independent of A): continues normally
+
+### Auto-Unblock
+
+When a blocked task's dependency resolves (the failed task is fixed and re-run), the blocked task **resumes automatically**. No manual restart needed.
+
+This requires the coordinator to track the dependency graph and poll or listen for resolution events.
+
+### Zombie Prevention
+
+A task waiting on a **permanently failed** dependency will never auto-unblock. These are zombies.
+
+**Rule:** The human (not the coordinator) must explicitly cancel zombie tasks. The coordinator flags them:
+```
+ZOMBIE: <task_id> -- blocked by <failed_task_id>, permanently failed, awaiting cancellation
+```
+
+Never let the coordinator silently discard zombies. Surface them explicitly.
+
+### Failure-Aware Checklist Addition
+
+Before marking a multi-agent workflow complete:
+- Verify no tasks in BLOCKED or ZOMBIE state
+- Verify all FAILED tasks were resolved or explicitly abandoned
+- Verify cascades did not silently skip required steps
 
 ## Anti-Patterns
 

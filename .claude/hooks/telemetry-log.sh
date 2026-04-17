@@ -64,4 +64,8 @@ printf '{"ts":"%s","event":"session_end","session_id":"%s","outcome":"%s","os":"
   "$DURATION_S" \
   >> "$LOG_FILE"
 
+# Signal Claude Code to suppress this hook's output from the conversation.
+# This hook writes to a JSONL file only -- nothing to surface to the user.
+printf '{"suppressOutput":true}\n'
+
 exit 0

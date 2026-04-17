@@ -170,6 +170,16 @@
             "type": "command",
             "command": "bash .claude/hooks/ember-gate.sh",
             "description": "Check ember gates (time + session count) — write ember-due flag if both pass"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/stop-wrap-guard.sh",
+            "description": "Opt-in: block if session has changes and /wrap-up has not run (enable via context/.wrap-guard)"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/stop-review-gate.sh",
+            "description": "Opt-in: block if source files modified and /code-review has not run (enable via context/.review-gate)"
           }
         ]
       }

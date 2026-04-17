@@ -26,7 +26,7 @@ steps:
   - name: Update user.md
     description: Only if genuinely new information — diff against existing content before writing
   - name: Commit State
-    description: Check current branch. If on main, present the branch choice prompt before committing. Stage and commit to the chosen destination.
+    description: Check current branch. If on main, present the branch choice prompt before committing. Stage and commit to the chosen destination. Then write the current ISO timestamp to `.claude/context/.wrapup-done` (signals stop-wrap-guard that wrap-up completed).
   - name: Reflect Check
     description: Ask user if new patterns or instincts emerged — if yes, invoke /reflect
   - name: Session Summary

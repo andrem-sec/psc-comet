@@ -33,7 +33,7 @@ cp .claude/settings.global.json ~/.claude/settings.json
 ```
 
 Open Claude Code in your project. Run `/start-here` the first time. Done.
-After it's just 2 core coammnds. `/start-here` at the beginning and `/wrap-up` at the end.
+After it's just 2 core coammnds. `/heartbeat` at the beginning and `/wrap-up` at the end.
 
 No API keys required. No install scripts. Core features work on Windows, Linux, and macOS.
 

@@ -2,7 +2,7 @@
 
 A portable `.claude/` configuration suite that gives Claude Code persistent memory, enforced standards, and structured workflows across every project you work in.
 
-Think of it as a second brain for Claude: the longer you use it, the more it knows about how you work, what your standards are, and where your projects stand. Each session builds on the last instead of starting from zero.
+Already using Obsidian as your second brain? PSC connects Claude directly to your vault via the bundled MCP server — search your notes, pull context, and write back, all inside your coding sessions.
 
 ---
 
@@ -133,9 +133,11 @@ All hooks are shell scripts registered in `settings.json`. They run without prom
 /install      /obsidian-setup /promote    /a11y-review
 ```
 
-### MCP Server
+### MCP Server — Obsidian (Second Brain Integration)
 
-`mcp-obsidian-psc` — Obsidian vault access: search, read, list, append, and patch notes via Local REST API and Omnisearch. Setup via `/obsidian-setup`. Requires the **Local REST API** and **Omnisearch** plugins with Obsidian running. Source in `mcp-servers/obsidian/`.
+If you use Obsidian as your second brain, PSC bridges it directly into your Claude sessions. The bundled `mcp-obsidian-psc` server exposes your vault as a live tool: search notes by keyword or semantic query, read full documents, list folders, append new content, and patch existing notes — all without leaving your coding session.
+
+Set up via `/obsidian-setup`. Requires the **Local REST API** and **Omnisearch** Obsidian plugins with Obsidian running. Source and tests in `mcp-servers/obsidian/`.
 
 ---
 

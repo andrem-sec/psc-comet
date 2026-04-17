@@ -168,23 +168,24 @@ Never commit to main directly. Use a feature branch with a PR.
 | design-token-guard | 2 | "token guard", "check tokens", "enforce tokens", "/design-token-guard" |
 | animation-safe | 2 | "animation audit", "check animations", "motion review", "/animation-safe" |
 | responsive-design | 2 | "responsive check", "mobile review", "breakpoint audit", "/responsive-design" |
+| reasoning-gates | 2 | "/reasoning-gates", "where should we think carefully", "identify branch points", "where could we go wrong" |
 
 ## Agent Registry
 
 | Agent | Constraint | Role |
 |-------|-----------|------|
-| researcher | read-only | research and synthesis |
-| planner | read-only | phased implementation plans |
-| architect | read-only, no-write | system design, ADR generation |
-| security-reviewer | read-only, isolated | security audit |
-| code-reviewer | read-only, isolated, no-write | quality and semantic review |
-| verifier | read-only, no-write | acceptance criteria verification |
+| researcher | readonly | research and synthesis |
+| planner | readonly | phased implementation plans |
+| architect | readonly | system design, ADR generation |
+| security-reviewer | readonly+isolated | security audit |
+| code-reviewer | readonly+isolated | quality and semantic review |
+| verifier | readonly | acceptance criteria verification |
 | mcp-agent | MCP-only | all MCP tool operations |
 | orchestrator | no-impl | multi-agent mission coordination |
 | docker-sandbox | worktree-isolated, permissionMode: dontAsk, ROE required | autonomous security scanning |
-| ui-critic | read-only | visual design critique against reference |
-| a11y-reviewer | read-only, isolated | WCAG 2.1 AA accessibility audit |
-| design-researcher | read-only | site teardown, inspiration curation, design vocabulary |
+| ui-critic | readonly | visual design critique against reference |
+| a11y-reviewer | readonly+isolated | WCAG 2.1 AA accessibility audit |
+| design-researcher | readonly | site teardown, inspiration curation, design vocabulary |
 
 ## Context Files
 

@@ -114,6 +114,21 @@ Running 10 Haiku calls costs roughly the same as 1 Sonnet call. Running 10 Sonne
 
 For batch operations on simple tasks, always use Haiku. For orchestrator-level decisions in agent teams, consider Opus. For most interactive work, Sonnet is correct.
 
+## Orchestrator-Level Routing (Multi-Agent Workflows)
+
+In multi-agent workflows, model assignment is per agent role, not per session. The session default does not override an agent's role-based assignment.
+
+**Rule:** Assign models in the agent's spawn prompt or YAML frontmatter, not in the orchestrator's session config.
+
+```
+Architect agent  → Opus   (even if session default is Sonnet)
+Implementer agent → Sonnet
+Verifier agent   → Sonnet
+Classifier agent → Haiku
+```
+
+Reference agentic-engineering skill for the full per-role table and rationale.
+
 ## Anti-Patterns
 
 Do not route to Opus because a task feels important. Route to Opus because it requires deep multi-step reasoning that Sonnet demonstrably gets wrong.

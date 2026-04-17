@@ -74,6 +74,12 @@ if [[ "$TIME_GATE_PASSED" == true && "$SESSION_GATE_PASSED" == true ]]; then
 
     # Reset session counter
     echo "0" > "$COUNT_FILE"
+
+    # Ember triggered -- do NOT suppress output so the user sees the consolidation notice.
+    printf '{"suppressOutput":false}\n'
+else
+    # No trigger -- nothing to surface to the user.
+    printf '{"suppressOutput":true}\n'
 fi
 
 exit 0

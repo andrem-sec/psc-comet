@@ -160,3 +160,12 @@ python scripts/generate-library-moc.py --vault-root /path/to/vault
 When called from `/obsidian-setup`, ask the gate question inline:
 "Do you have a PDF/EPUB library you want to import into Obsidian?"
 If yes, run this skill in full starting from Step 2. If no, skip silently.
+
+## Mandatory Checklist
+
+1. Verify `--library-root` and `--vault-root` were collected from the user before running any script
+2. Verify both paths exist on disk before invoking the pipeline
+3. Verify `pymupdf4llm` is installed; abort if missing
+4. Verify pandoc is available or was successfully installed; do not proceed silently if it failed on Linux
+5. Verify conversion output ("Conversion: X converted") and MOC generation output ("MOC generation: X created") are reported separately
+6. Verify `Library MOC.md` exists at `<vault-root>/02. AI-Vault/Library/` after a run that created new notes

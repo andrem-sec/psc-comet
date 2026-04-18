@@ -11,13 +11,14 @@ triggers:
   - "/plan"
 context_files:
   - context/user.md
+  - context/principles.md
 steps:
   - name: Scope Assessment
-    description: Count files, identify domains, flag security sensitivity
+    description: Count files, identify domains, flag security sensitivity. If editing a skill file, grep for its name across other skills to identify downstream dependents — list them in the plan so their behavior can be verified after the change.
   - name: Plan Mode Decision
     description: If 3+ files, cross-domain, or security-sensitive — enter plan mode. State the decision explicitly.
   - name: Decompose
-    description: Break into ordered steps. Max 5 sequential before a checkpoint.
+    description: Break into ordered steps. Before writing each step, assess whether it carries hidden complexity not visible during scope scan. If yes, reason through it before writing the step. Max 5 sequential before a checkpoint.
   - name: Identify Risks
     description: Flag irreversible operations, external calls, schema changes — each needs explicit confirmation
   - name: Parallel Opportunities

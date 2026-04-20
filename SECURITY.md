@@ -14,7 +14,7 @@ If you discover a security vulnerability in Project Santa Clause, please report 
 
 ### How to Report
 
-Open a [GitHub Security Advisory](https://github.com/Helpless2044/project_santa_clause/security/advisories/new) on this repository. This creates a private disclosure thread visible only to maintainers.
+Open a [GitHub Security Advisory](https://github.com/andrem-sec/psc-comet/security/advisories/new) on this repository. This creates a private disclosure thread visible only to maintainers.
 
 Alternatively, email the maintainer directly via the contact on the GitHub profile.
 

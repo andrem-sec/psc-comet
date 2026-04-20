@@ -55,6 +55,9 @@ Without routing guidance, every task defaults to the same model regardless of wh
 - Novel problem solving with no clear precedent
 - High-stakes decisions where error is costly
 - Cross-domain synthesis
+- Agent-type selection and multi-agent workflow design (Opus achieves ~83% vs Sonnet ~72% on tool modality selection -- source: Terminal Agents paper, 2604.00073)
+
+**Pro plan note:** Opus requires Anthropic Max plan. If on Pro plan, Sonnet will still work for agent/tool selection but may default to suboptimal choices. Treat Opus as a soft recommendation, not a hard requirement, for this category.
 
 ## Agent-Level Routing
 
@@ -65,6 +68,24 @@ model: claude-haiku-4-5-20251001    # retrieval, simple execution
 model: claude-sonnet-4-6             # standard work (default)
 model: claude-opus-4-6              # deep reasoning, high stakes
 ```
+
+## Two-Stage Judge Escalation
+
+Before delivering Sonnet output, scan for low-confidence signals. If any are present,
+escalate to Opus and re-run the same prompt before delivering:
+
+**Escalation signals:**
+- Hedging language ("I think", "probably", "might", "I'm not sure", "it depends")
+- Multiple competing answers presented without a clear recommendation
+- Output that contradicts known session context or prior decisions
+- Explicit uncertainty: "I cannot determine" or "more information needed" on a task that should be answerable
+
+**On escalation:**
+1. Re-run with Opus
+2. Deliver the Opus output
+3. Note the escalation: "Sonnet was uncertain -- Opus used"
+
+Do not escalate on tasks where Sonnet hedging is appropriate (open-ended questions, design tradeoffs with no clear winner). Escalate only when a concrete answer was expected and Sonnet failed to commit.
 
 ## Fallback Model Strategy
 

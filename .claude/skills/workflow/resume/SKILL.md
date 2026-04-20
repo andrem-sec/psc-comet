@@ -118,6 +118,40 @@ Which is correct? (state / files / explain)
 
 Do not guess. Incorrect resumption can overwrite work that was done.
 
+## Degeneration Reset
+
+If an agent run shows degeneration signals, do not attempt to resume normally.
+Instead, trigger a clean reset:
+
+**Degeneration signals (any one is sufficient):**
+- Repeated tool failures (same tool, same inputs, same error, 2+ times)
+- Circular reasoning (same conclusion reached via different paths without new information)
+- Max steps reached without meaningful progress
+- User explicitly flags the agent as stuck ("it keeps doing the same thing", "it's looping")
+- Output quality degrading across consecutive steps (shorter, vaguer, more hedged)
+
+**Reset protocol:**
+
+1. Discard all tool-call history and intermediate reasoning from the degenerated run
+2. Retain only: the original task description, the system prompt, and any verified outputs
+   (files actually written, tests that actually passed -- confirmed state only)
+3. Reconstruct a minimal state brief: "Task was: [X]. Verified progress: [list]. Remaining: [Y]."
+4. Present the reset brief to the user: "The previous run degenerated. Reset to clean state. Confirmed progress preserved. Proceed? (yes / adjust)"
+5. On confirmation: restart from the first unconfirmed step with a fresh context window
+
+**What to preserve across a reset:**
+- Completed file writes (the files exist -- they are ground truth)
+- Confirmed test passes
+- User-approved decisions from the session
+
+**What to discard:**
+- Tool call history
+- Intermediate reasoning chains
+- Partial outputs not yet confirmed by the user or by a test
+
+Do not attempt to "salvage" a degenerated run by continuing from the last coherent step.
+Context pollution from a bad run will corrupt the resumed run. Reset and restart clean.
+
 ## What NOT to Retry
 
 **Critical**: If the interrupted session tried approaches that failed, those must be documented in `context/learnings.md` and **must not be retried** during resumption.

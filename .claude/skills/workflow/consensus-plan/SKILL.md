@@ -60,6 +60,34 @@ The architect must produce:
 
 If the architect cannot find a meaningful objection, it must say so explicitly: "No material objection found. Plan is sound." This is a valid outcome — not a failure to engage.
 
+### Round 2.5 — Anonymous Peer Review
+
+After the architect steelman, invoke a third reviewer (researcher agent) with:
+- The planner's draft
+- The architect's objection and proposed modification
+- This instruction: "Review this plan as if you have no stake in either side. You do not know who wrote the plan or the objection. Find the one assumption that both the planner and architect have accepted without questioning."
+
+The peer reviewer must produce:
+1. The shared assumption (one, not a list)
+2. What would have to be true for that assumption to be wrong
+3. A recommendation: proceed / revisit assumption before continuing
+
+This step prevents anchoring: both the planner and architect may share a blind spot that only
+an unprimed reviewer can surface.
+
+If the peer reviewer finds no unquestioned assumption, it must say so explicitly.
+
+**Nudge mechanism:** After peer review, issue a forced challenge to the planner:
+
+```
+Nudge: The plan assumes [shared assumption identified by peer reviewer].
+Challenge: [one question that would invalidate this assumption if the answer is no]
+Planner must address this before the plan is finalized.
+```
+
+The planner responds inline. If the response is satisfactory, proceed to Convergence Check.
+If the response reveals a gap, return to Round 2 with the new information.
+
 ### Round 3 — Convergence Check
 
 Assess the architect's objection:
@@ -133,6 +161,19 @@ Reviewer verdict: APPROVED | NO OBJECTION
 
 Write this to `context/decisions.md`.
 
+### Living Decisions
+
+ADRs are not permanent. Add a `Revisit trigger` field to every ADR:
+
+```
+### Revisit trigger
+[Condition that would make this decision worth re-evaluating — e.g., "if X dependency is deprecated",
+"if team size exceeds N", "if performance degrades past Y threshold"]
+```
+
+At session start (heartbeat) or at `/retro`, surface any ADR whose revisit trigger has been met.
+Past decisions are reference — they are not binding if circumstances have changed.
+
 ## Confirmation Gate
 
 Present the ADR to the user. Ask: "Confirmed? (yes / modify / no)"
@@ -162,7 +203,9 @@ Do not loop more than twice. If the plan is still unresolved after 2 loops, the 
 1. Verify the planner agent was invoked and produced a structured plan
 2. Verify the architect agent was invoked with explicit steelman instructions
 3. Verify the architect produced exactly one objection (not a list)
-4. Verify the objection was either resolved in the plan or escalated to the user
-5. Verify pre-mortem was produced for HIGH risk plans (not skipped)
-6. Verify the ADR was written to context/decisions.md
-7. Verify the user confirmed the ADR before any implementation began
+4. Verify Round 2.5 anonymous peer review was run (researcher agent, no prior context)
+5. Verify the nudge was issued and the planner responded before convergence
+6. Verify the objection was either resolved in the plan or escalated to the user
+7. Verify pre-mortem was produced for HIGH risk plans (not skipped)
+8. Verify the ADR was written to context/decisions.md with a Revisit trigger field
+9. Verify the user confirmed the ADR before any implementation began

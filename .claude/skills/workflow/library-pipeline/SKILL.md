@@ -155,17 +155,27 @@ python scripts/generate-library-moc.py --vault-root /path/to/vault
 | Obsidian not running | MOC notes written directly to vault filesystem. MCP tools unavailable but not required. |
 | Library root empty | Script reports "No PDF or EPUB files found" and exits cleanly. |
 
+## Wiki Pattern (Karpathy-inspired)
+
+Generated notes follow a consistent wiki schema defined in `scripts/wiki-schema.md`.
+
+**Key additions to generated notes:**
+- `cross_refs: []` -- empty on creation; filled by Claude when summarizing
+- `summary_status: "pending"` -- updated to "done" after Claude fills in the Summary section
+- `log.md` -- pipeline appends a creation entry to `<vault-root>/02. AI-Vault/Library/log.md` after each new note
+
+**Update-vs-create rule:**
+- Create when: note does not exist
+- Update when: user requests re-index OR summary_status is "pending"
+- Never overwrite a note with `summary_status: "done"` without explicit user instruction
+
+**Cross-references:** Added by Claude via `obsidian_patch`, not by the pipeline. The pipeline
+only creates the empty `cross_refs: []` slot.
+
+See `scripts/wiki-schema.md` for the full field reference and update logic.
+
 ## Integration with obsidian-setup
 
 When called from `/obsidian-setup`, ask the gate question inline:
 "Do you have a PDF/EPUB library you want to import into Obsidian?"
 If yes, run this skill in full starting from Step 2. If no, skip silently.
-
-## Mandatory Checklist
-
-1. Verify `--library-root` and `--vault-root` were collected from the user before running any script
-2. Verify both paths exist on disk before invoking the pipeline
-3. Verify `pymupdf4llm` is installed; abort if missing
-4. Verify pandoc is available or was successfully installed; do not proceed silently if it failed on Linux
-5. Verify conversion output ("Conversion: X converted") and MOC generation output ("MOC generation: X created") are reported separately
-6. Verify `Library MOC.md` exists at `<vault-root>/02. AI-Vault/Library/` after a run that created new notes

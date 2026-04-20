@@ -29,7 +29,7 @@ psc_comet (https://github.com/...)
   Global instincts: 3
   Last updated: 2026-03-28 14:30:00
 
-red_team_toolkit (https://github.com/...)
+my-other-project (https://github.com/...)
   Project instincts: 8
   Global instincts: 3
   Last updated: 2026-03-27 10:15:00

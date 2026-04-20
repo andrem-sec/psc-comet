@@ -64,6 +64,23 @@ Active principles for this task:
 If no principles apply, skip this section silently and proceed to the scan.
 If the user overrides a principle, follow the override protocol in principles.md before continuing.
 
+## Ambient Consensus-Plan Trigger
+
+During the entropy scan, check whether any candidate branch point has 2+ competing valid
+options with no clear dominant choice. If so, emit a soft suggestion before presenting
+the candidate list:
+
+```
+Trade-off detected at [branch point name]: [2+ options with no clear winner].
+This looks like a consensus-plan candidate. Invoke /consensus-plan or proceed with reasoning gates?
+```
+
+The user can dismiss this with "proceed" and continue with standard gate execution.
+Do not block execution waiting for a response -- surface and continue.
+
+Emit this suggestion at most once per reasoning-gates invocation, even if multiple trade-offs
+are detected. The goal is a gentle nudge, not an interruption.
+
 ## Entropy Scan Format
 
 Output a numbered list of candidates. For each:

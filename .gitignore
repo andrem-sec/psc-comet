@@ -60,6 +60,9 @@ Thumbs.db
 # Node.js dependencies
 node_modules/
 
+# Generated from settings.template.json by install.sh -- machine-specific, never commit
+.claude/settings.json
+
 # Session artifacts and development files (do not commit)
 SESSION_SUMMARY.md
 refining_anthropic.md

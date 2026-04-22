@@ -129,3 +129,10 @@ Heartbeat notes these files exist but does not load their content.
 ## Cross-Platform Support
 
 Windows, Linux, and macOS. See `scripts/PATH_HANDLING.md` for platform detection details.
+
+## Vault Rules
+
+Before any Obsidian vault access, invoke `/vault-sync`. This pulls from remote, syncs the USB backup, and confirms zone permissions.
+
+`01. Personal/` is read-only for Claude. Writing there requires explicit user instruction in the current session.
+`02. AI-Vault/` is Claude's knowledge base -- read and write freely.

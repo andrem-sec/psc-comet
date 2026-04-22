@@ -179,12 +179,3 @@ See `scripts/wiki-schema.md` for the full field reference and update logic.
 When called from `/obsidian-setup`, ask the gate question inline:
 "Do you have a PDF/EPUB library you want to import into Obsidian?"
 If yes, run this skill in full starting from Step 2. If no, skip silently.
-
-## Mandatory Checklist
-
-1. Verify `--library-root` and `--vault-root` paths exist before running any script
-2. Verify `pymupdf4llm` is installed before attempting PDF conversion
-3. Verify `convert-to-md.py` output before running `generate-book-moc.py`
-4. Verify at least one MOC note was written to `<vault-root>/02. AI-Vault/Library/`
-5. Report conversion and MOC generation counts separately so partial failures are visible
-6. Never overwrite a note with `summary_status: "done"` without explicit user instruction

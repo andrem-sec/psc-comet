@@ -24,12 +24,12 @@ For each project:
 ## Example
 
 ```
-psc_comet (https://github.com/...)
+my-project (https://github.com/user/my-project)
   Project instincts: 15
   Global instincts: 3
   Last updated: 2026-03-28 14:30:00
 
-my-other-project (https://github.com/...)
+another-project (https://github.com/user/another-project)
   Project instincts: 8
   Global instincts: 3
   Last updated: 2026-03-27 10:15:00

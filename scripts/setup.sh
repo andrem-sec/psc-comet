@@ -69,7 +69,14 @@ fi
 # ── component status checks ───────────────────────────────────────────────────
 
 check_hooks() {
-  grep -q '"bash \.claude/hooks/' "$SETTINGS" 2>/dev/null && echo "pending" || echo "done"
+  # pending if settings.json is missing or still has unresolved {{PSC_ROOT}} placeholders
+  if [ ! -f "$SETTINGS" ]; then
+    echo "pending"
+  elif grep -q '{{PSC_ROOT}}' "$SETTINGS" 2>/dev/null; then
+    echo "pending"
+  else
+    echo "done"
+  fi
 }
 
 check_node() {

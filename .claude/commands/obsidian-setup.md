@@ -4,26 +4,18 @@ Run the interactive setup to connect Claude Code to your Obsidian vault.
 
 ## What This Does
 
-**Phase 1 -- Technical Setup**
 1. Checks Node.js version (18+ required)
 2. Installs MCP server dependencies
 3. Guides you through enabling the required Obsidian plugins
 4. Prompts for your Obsidian REST API key
 5. Writes `.env` and registers the MCP server
 6. Tests connections to Obsidian REST API and Omnisearch
-7. Prompts you to restart Claude Code
-
-**Phase 2 -- Vault Governance** (runs on the next invocation, after restart)
-1. Lists your vault's top-level folders via the live MCP connection
-2. Asks you to declare an access level for each folder: `full`, `read-only`, or `off-limits`
-3. Generates `.claude/hooks/obsidian-write-guard.sh` with your declared rules
-4. Registers the hook in `.claude/settings.json`
-5. Records the access rules in `.claude/context/user.md`
+7. Tells you whether to restart Claude Code
 
 ## Required Obsidian Plugins
 
-- **Local REST API** -- provides vault access over HTTP
-- **Omnisearch** -- provides full-text search (enable HTTP Server in its settings)
+- **Local REST API** — provides vault access over HTTP
+- **Omnisearch** — provides full-text search (enable HTTP Server in its settings)
 
 Both must be installed and Obsidian must be running for the MCP tools to work.
 
@@ -33,12 +25,15 @@ Both must be installed and Obsidian must be running for the MCP tools to work.
 /obsidian-setup
 ```
 
-Run once to complete Phase 1. Restart Claude Code. Run again to complete Phase 2.
-Re-running after Phase 2 is complete lets you update your vault access rules.
+Claude will run `claude mcp add` to register the server, or run the interactive setup script:
+
+```bash
+node mcp-servers/obsidian/setup.js
+```
 
 ## After Setup
 
-You will have access to these tools:
+Restart Claude Code. You will have access to these tools:
 
 | Tool | Description |
 |------|-------------|
@@ -48,36 +43,15 @@ You will have access to these tools:
 | `obsidian_append` | Append content to a note |
 | `obsidian_patch` | Insert content under a heading |
 
-## Optional: Book and Paper Library
+## Re-running Setup
 
-After setup completes, ask the user:
-"Do you have a PDF/EPUB book or paper library you want to import into Obsidian?"
-
-If yes, run the `library-pipeline` skill. It will ask for the library path and
-vault path, check dependencies, and run the conversion. No paths are hardcoded --
-the skill collects everything from the user at runtime.
-
-If no, skip silently.
+Safe to re-run at any time. Existing API key is preserved unless you paste a new one.
 
 ---
 
 ## Instructions for Claude
 
-### Step 0 -- Detect the current phase
-
-Check whether the Obsidian MCP tools are available in this session:
-
-- If `mcp__obsidian__obsidian_list` is **not** available: Phase 1 (MCP not yet registered). Run Phase 1.
-- If `mcp__obsidian__obsidian_list` **is** available and `.claude/hooks/obsidian-write-guard.sh` does **not** exist: Phase 2 (MCP connected, governance not yet done). Run Phase 2.
-- If `mcp__obsidian__obsidian_list` **is** available and `.claude/hooks/obsidian-write-guard.sh` **already exists**: offer the user a choice -- update existing vault rules, or exit.
-
----
-
-### Phase 1 -- Technical Setup
-
-Register the MCP server using `claude mcp add`.
-
-On Linux, `mcpServers` in `~/.claude/settings.json` is NOT read by Claude Code. Use `claude mcp add`, which writes to `~/.claude.json`. Verify with `claude mcp list`.
+When this command is invoked on Linux, register the MCP server using `claude mcp add`:
 
 ```bash
 claude mcp add \
@@ -89,150 +63,12 @@ claude mcp add \
   -- obsidian node <project_root>/mcp-servers/obsidian/src/index.js
 ```
 
+Note: on Linux, `mcpServers` in `~/.claude/settings.json` is NOT read by Claude Code. Use `claude mcp add` which writes to `~/.claude.json`. Verify with `claude mcp list`.
+
 For interactive first-time setup (API key configuration), run:
 
 ```bash
 node mcp-servers/obsidian/setup.js
 ```
 
-After Phase 1 completes, tell the user: **"Restart Claude Code, then run `/obsidian-setup` again to configure vault access rules."**
-
----
-
-### Phase 2 -- Vault Governance
-
-**Step 1 -- Discover vault structure**
-
-Call `mcp__obsidian__obsidian_list` with `path: ""` (vault root) to list top-level folders.
-Present the folder list clearly to the user.
-
-**Step 2 -- Declare access levels**
-
-Ask the user to assign one of three access levels to each folder:
-
-| Level | Meaning |
-|-------|---------|
-| `full` | Claude may read and write |
-| `read-only` | Claude may read but not write |
-| `off-limits` | Claude may neither read nor write |
-
-Also ask: "For any folder not listed here, should Claude default to full access or read-only?"
-
-There are no required answers. Full access to everything is valid. Everything read-only is valid.
-Accept whatever the user declares -- this is their vault.
-
-Note: `obsidian_search` runs across the entire vault and cannot be path-filtered. Off-limits folders
-prevent targeted reads and all writes, but search results may still surface content from those folders.
-Inform the user of this limitation if they declare any off-limits folders.
-
-**Step 3 -- Generate the write guard hook**
-
-Write `.claude/hooks/obsidian-write-guard.sh` with the user's declared rules substituted in.
-If the file already exists (re-run case), overwrite it.
-
-```bash
-#!/usr/bin/env bash
-# PreToolUse: mcp__obsidian__obsidian_patch | mcp__obsidian__obsidian_append
-#             mcp__obsidian__obsidian_read  | mcp__obsidian__obsidian_list
-# Generated by /obsidian-setup vault governance phase.
-# To update these rules, re-run /obsidian-setup or edit the arrays below directly.
-
-set -euo pipefail
-
-INPUT=$(cat)
-TOOL_NAME=$(echo "$INPUT" | grep -oP '"tool_name"\s*:\s*"\K[^"]+' 2>/dev/null | head -1 || echo "")
-VAULT_PATH=$(echo "$INPUT" | grep -oP '"path"\s*:\s*"\K[^"]+' 2>/dev/null | head -1 || echo "")
-
-if [ -z "$VAULT_PATH" ]; then
-    exit 0
-fi
-
-# Folders Claude may not access at all (reads and writes blocked).
-OFF_LIMITS=(
-  # "FolderName/"
-)
-
-# Folders Claude may read but not write (writes blocked).
-READ_ONLY=(
-  # "FolderName/"
-)
-
-is_write_op() {
-    case "$TOOL_NAME" in
-        mcp__obsidian__obsidian_patch|mcp__obsidian__obsidian_append) return 0 ;;
-        *) return 1 ;;
-    esac
-}
-
-for folder in "${OFF_LIMITS[@]}"; do
-    if echo "$VAULT_PATH" | grep -qE "^${folder}"; then
-        echo "BLOCKED: '${VAULT_PATH}' is in an off-limits folder ('${folder}')." >&2
-        echo "To change this, re-run /obsidian-setup." >&2
-        exit 2
-    fi
-done
-
-if is_write_op; then
-    for folder in "${READ_ONLY[@]}"; do
-        if echo "$VAULT_PATH" | grep -qE "^${folder}"; then
-            echo "BLOCKED: '${VAULT_PATH}' is in a read-only folder ('${folder}')." >&2
-            echo "To allow this write, say so explicitly in this session." >&2
-            exit 2
-        fi
-    done
-fi
-
-exit 0
-```
-
-Substitute the user's declared folders into the arrays. Use the exact folder name followed by `/`
-(e.g., `"01. Personal/"`, `"Archive/"`). If a category has no folders, leave the array empty with
-the comment intact so the user knows where to add entries manually.
-
-**Step 4 -- Register the hook in settings.json**
-
-Check `.claude/settings.json`. If a PreToolUse entry with matcher
-`mcp__obsidian__obsidian_patch|mcp__obsidian__obsidian_append|mcp__obsidian__obsidian_read|mcp__obsidian__obsidian_list`
-already exists, leave it as-is. If it does not exist, add this entry to the `PreToolUse` array:
-
-```json
-{
-  "matcher": "mcp__obsidian__obsidian_patch|mcp__obsidian__obsidian_append|mcp__obsidian__obsidian_read|mcp__obsidian__obsidian_list",
-  "hooks": [
-    {
-      "type": "command",
-      "command": "bash .claude/hooks/obsidian-write-guard.sh",
-      "description": "Enforce vault access rules declared during /obsidian-setup"
-    }
-  ]
-}
-```
-
-**Step 5 -- Record rules in user.md**
-
-Check `.claude/context/user.md`. If an `## Obsidian Vault Access Rules` section already exists,
-replace it. If not, append it at the end of the file.
-
-```markdown
-## Obsidian Vault Access Rules
-
-Declared during `/obsidian-setup`. To update, re-run the command.
-
-| Folder | Access |
-|--------|--------|
-| ExampleFolder/ | full |
-| ExamplePrivate/ | off-limits |
-| ExampleArchive/ | read-only |
-
-Default (unlisted folders): full
-```
-
-Substitute the user's actual folder names, access levels, and declared default.
-
-**Step 6 -- Confirm**
-
-Tell the user:
-- Which folders were set to full, read-only, and off-limits
-- That `obsidian-write-guard.sh` was written and the hook is registered
-- That rules can be updated at any time by re-running `/obsidian-setup`
-- The search limitation: `obsidian_search` is vault-wide and cannot be scoped by folder
+After the script completes, remind the user to restart Claude Code for the MCP server to load.

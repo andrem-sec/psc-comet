@@ -56,5 +56,6 @@ Command definitions live in `.claude/commands/`. This file is the quick-referenc
 | /start-here | First-time setup — interview, write context files, verify system |
 | /tdd | Enter TDD mode — Red, Green, Refactor with phase gates |
 | /ui-slop-guard | Audit UI files for AI slop patterns |
+| /vault-sync | Sync Obsidian vault with GitHub remote and USB backup, enforce zone access rules |
 | /verify | Unified verification sweep before commits and PRs |
 | /wrap-up | End-of-session protocol — learnings, context, commit |

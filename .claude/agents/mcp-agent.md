@@ -91,6 +91,20 @@ Add servers to Claude Code's MCP configuration (`~/.claude/claude_desktop_config
 }
 ```
 
+## Obsidian Search Verification Rule
+
+**This rule is mandatory and has no exceptions.**
+
+Obsidian search (`obsidian_search`) returns path strings that appear *inside* note content -- MOC references, inline links, and text mentions. These are not file paths. The search result score and path field cannot be trusted as proof the file exists.
+
+Before reporting any path from an Obsidian search result:
+
+1. Call `mcp__obsidian__obsidian_read` on each returned path.
+2. If the read succeeds and returns content, the file is verified -- report it.
+3. If the read fails or returns empty, mark that path as **UNVERIFIED** and do not include it in your findings.
+
+Never report an Obsidian path that has not passed the read verification step. If all results fail verification, return status FAILED with a note explaining the search returned no verifiable files.
+
 ## What You Do Not Do
 
 - Make architectural decisions

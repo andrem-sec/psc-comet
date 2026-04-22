@@ -26,9 +26,36 @@ Invoke the wrap-up skill now. Run these steps in order:
    compare against existing content. Do not rewrite sections that already capture the same information.
    Append-only unless an existing entry is factually wrong or outdated.
 
-4. **Commit** — conventional commit message for any uncommitted changes.
+4. **Write session log** — append a session entry to
+   `02. AI-Vault/Sessions/YYYYMMDD - Session Log.md` (use today's date for YYYYMMDD).
+   - If today's file does not exist: create it with this header, then write the first entry:
+     ```
+     ---
+     date: YYYY-MM-DD
+     tags: [session-log, ProjectTag]
+     ---
 
-5. **Reflect check** — ask the user: "Did any new patterns, reusable rules, or instincts emerge
+     # Session Log — YYYY-MM-DD
+
+     ---
+     ```
+   - If today's file already exists: append after the last entry. Never remove or overwrite existing entries.
+   - Entry format — use the session end time (HH:MM, 24h):
+     ```
+     ## HH:MM — Topic
+
+     - what was done or built
+     - key decision made and why (one line)
+     - notable finding or blocker
+     ```
+   - Replace `ProjectTag` with the relevant project tags for this session (e.g. `Backend`, `Infra`, `PSC`, `ProjectName`).
+     Use only tags that were actually touched this session.
+   - Keep bullets to 5-8 items. Summarise -- do not transcribe. No next steps, no risks (those belong in handoff).
+   - After writing, run `bash scripts/vault-sync.sh push` to commit and sync the vault.
+
+5. **Commit** — conventional commit message for any uncommitted changes.
+
+6. **Reflect check** — ask the user: "Did any new patterns, reusable rules, or instincts emerge
    this session worth capturing? (yes/no)"
    - If yes: invoke `/reflect` now.
    - If no: wrap-up is complete.

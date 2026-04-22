@@ -101,17 +101,17 @@ if [ -f "$SETTINGS" ]; then
 fi
 echo ""
 
-# Floor 4: All agents in registry have files
-# Parses context/agents-registry.md (extracted from CLAUDE.md via B-14)
+# Floor 4: All agents in CLAUDE.md registry have files
+# Parses the Agent Registry table -- stops at next ## section to avoid false matches
 echo "Floor 4: Agent files"
-AGENTS_REGISTRY="$CLAUDE_DIR/context/agents-registry.md"
-if [ -f "$AGENTS_REGISTRY" ] && [ -d "$AGENTS_DIR" ]; then
-    agent_names=$(awk -F'|' '/^\| [^-]/ && !/^\| Agent/ { gsub(/ /,"",$2); if ($2 != "") print $2 }' "$AGENTS_REGISTRY")
+if [ -f "$CLAUDE_MD" ] && [ -d "$AGENTS_DIR" ]; then
+    agent_names=$(awk '/^## Agent Registry/{found=1; next} found && /^## /{exit} found && /^\| [^-]/{print $2}' "$CLAUDE_MD" \
+        | grep -v '^Agent$' | grep -v '^$')
     agent_failures=0
     while IFS= read -r agent; do
         [ -z "$agent" ] && continue
         if [ ! -f "$AGENTS_DIR/$agent.md" ]; then
-            fail "Agent '$agent' in registry has no file at $AGENTS_DIR/$agent.md"
+            fail "Agent '$agent' in CLAUDE.md registry has no file at $AGENTS_DIR/$agent.md"
             agent_failures=1
         fi
     done <<< "$agent_names"
@@ -119,22 +119,22 @@ if [ -f "$AGENTS_REGISTRY" ] && [ -d "$AGENTS_DIR" ]; then
         pass "All registered agents have files on disk"
     fi
 else
-    [ ! -f "$AGENTS_REGISTRY" ] && fail "agents-registry.md missing at $AGENTS_REGISTRY"
+    [ ! -f "$CLAUDE_MD" ] && fail "CLAUDE.md missing -- cannot check agent registry"
     [ ! -d "$AGENTS_DIR" ] && fail "agents directory missing at $AGENTS_DIR"
 fi
 echo ""
 
-# Floor 5: All skills in registry have directories
-# Parses context/skills-registry.md (extracted from CLAUDE.md via B-14)
+# Floor 5: All skills in CLAUDE.md registry have directories
+# Parses the Skill Registry table -- stops at next ## section
 echo "Floor 5: Skill directories"
-SKILLS_REGISTRY="$CLAUDE_DIR/context/skills-registry.md"
-if [ -f "$SKILLS_REGISTRY" ] && [ -d "$SKILLS_DIR" ]; then
-    skill_names=$(awk -F'|' '/^\| [^-]/ && !/^\| Skill/ { gsub(/ /,"",$2); if ($2 != "") print $2 }' "$SKILLS_REGISTRY")
+if [ -f "$CLAUDE_MD" ] && [ -d "$SKILLS_DIR" ]; then
+    skill_names=$(awk '/^## Skill Registry/{found=1; next} found && /^## /{exit} found && /^\| [^-]/{print $2}' "$CLAUDE_MD" \
+        | grep -v '^Skill$' | grep -v '^$')
     skill_failures=0
     while IFS= read -r skill; do
         [ -z "$skill" ] && continue
         if ! find "$SKILLS_DIR" -mindepth 2 -maxdepth 2 -type d -name "$skill" | grep -q .; then
-            fail "Skill '$skill' in registry has no directory under $SKILLS_DIR"
+            fail "Skill '$skill' in CLAUDE.md registry has no directory under $SKILLS_DIR"
             skill_failures=1
         fi
     done <<< "$skill_names"
@@ -142,7 +142,7 @@ if [ -f "$SKILLS_REGISTRY" ] && [ -d "$SKILLS_DIR" ]; then
         pass "All registered skills have directories on disk"
     fi
 else
-    [ ! -f "$SKILLS_REGISTRY" ] && fail "skills-registry.md missing at $SKILLS_REGISTRY"
+    [ ! -f "$CLAUDE_MD" ] && fail "CLAUDE.md missing -- cannot check skill registry"
     [ ! -d "$SKILLS_DIR" ] && fail "skills directory missing at $SKILLS_DIR"
 fi
 echo ""

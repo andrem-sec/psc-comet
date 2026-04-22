@@ -66,7 +66,6 @@ Before spawning an implementation agent, the orchestrator must:
 1. Extract specific file paths and line numbers from research results
 2. Write a self-contained implementation spec (the worker can execute it without looking back)
 3. State the exact test or command that must pass to confirm the work is done
-
 Workers receive complete, standalone prompts. They have no access to the coordinator's conversation. Any worker prompt that references "the coordinator said" or "based on your findings" is malformed.
 
 ## Skill Rules

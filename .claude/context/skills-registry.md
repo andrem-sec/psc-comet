@@ -63,3 +63,4 @@ Load this file on demand when selecting or invoking a skill. Do not load at sess
 | animation-safe | 2 | "animation audit", "check animations", "motion review", "/animation-safe" |
 | responsive-design | 2 | "responsive check", "mobile review", "breakpoint audit", "/responsive-design" |
 | reasoning-gates | 2 | "/reasoning-gates", "where should we think carefully", "identify branch points", "where could we go wrong" |
+| vault-sync | 1 | before any Obsidian vault access, "sync vault", "pull vault", "push vault" |

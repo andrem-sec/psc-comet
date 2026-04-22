@@ -13,8 +13,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash {{PSC_ROOT}}/.claude/hooks/01-personal-write-guard.sh",
-            "description": "Block writes to 01. Personal/ in the Obsidian vault"
+            "command": "bash {{PSC_ROOT}}/.claude/hooks/obsidian-write-guard.sh",
+            "description": "Block writes to the protected vault path (configured via ~/.claude/psc-personal-path)"
           }
         ]
       },

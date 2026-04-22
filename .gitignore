@@ -35,6 +35,9 @@ Thumbs.db
 # Session handoff — overwritten each session, personal to the user
 .claude/context/handoff.md
 
+# Architectural decision log — development history, not for public distribution
+.claude/context/decisions.md
+
 # Stop hook guard markers -- transient session state, never commit
 .claude/context/.wrapup-done
 .claude/context/.review-done

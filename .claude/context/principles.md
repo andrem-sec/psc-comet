@@ -21,7 +21,7 @@ P-XX bypassed. Log as one-time exception or update the principle?
   3. Archive it (Claude moves it to Archived section)
 ```
 
-If the principle is updated or archived, apply the same change to psc_comet.
+If the principle is updated or archived, apply the same change to your other PSC environments.
 
 ## Format
 

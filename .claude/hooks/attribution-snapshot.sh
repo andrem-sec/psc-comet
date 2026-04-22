@@ -48,7 +48,10 @@ if [[ -z "$FILE_PATH" || ! -f "$FILE_PATH" ]]; then
 fi
 
 # Hash the file content — not logged, only the hash
-SHA=$(sha256sum "$FILE_PATH" 2>/dev/null | cut -d' ' -f1 || echo "unavailable")
+# sha256sum = Linux/Windows (Git Bash); shasum -a 256 = macOS fallback
+SHA=$(sha256sum "$FILE_PATH" 2>/dev/null | cut -d' ' -f1 \
+  || shasum -a 256 "$FILE_PATH" 2>/dev/null | cut -d' ' -f1 \
+  || echo "unavailable")
 TS="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 
 # Sanitize file path — strip home dir prefix to avoid leaking absolute paths

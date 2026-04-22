@@ -35,14 +35,10 @@ Match the task to the right model. Wrong direction wastes money or produces wron
 - High-stakes decisions where error is costly
 - Novel problems with no clear precedent
 
-## Sub-Agent Cost
-
-Agent workflows use roughly 7-10x more tokens than a single-agent session. Each sub-agent wakes with its own full context reload. Default sub-agents to Haiku unless the task requires reasoning. Reserve Sonnet/Opus for the parent agent.
-
 ## Rule
 
 Route to Opus because the task requires deep multi-step reasoning Sonnet demonstrably gets wrong — not because it feels important.
 
-Route to Haiku for anything batch, repetitive, lookup-based, or running as a sub-agent.
+Route to Haiku for anything batch, repetitive, or lookup-based.
 
 Default to Sonnet for everything else.

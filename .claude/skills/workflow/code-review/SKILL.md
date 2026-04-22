@@ -27,7 +27,7 @@ steps:
   - name: Security Pass
     description: Flag anything that warrants a full security-gate run (do not duplicate security-gate)
   - name: Verdict
-    description: APPROVE / REQUEST CHANGES / BLOCK — with specific, actionable feedback
+    description: APPROVE / REQUEST CHANGES / BLOCK — with specific, actionable feedback. Then write the current ISO timestamp to `.claude/context/.review-done` (signals stop-review-gate that review completed).
 ---
 
 # Code Review Skill
@@ -125,6 +125,76 @@ Impact: [what breaks or could break]
 Fix: [specific recommendation]
 Blocking: YES
 ```
+
+## Adversarial Mode (`/code-review --adversarial`)
+
+Standard mode asks: "What is wrong with this code?"
+Adversarial mode asks: "Why is this the wrong approach entirely?"
+
+Use adversarial mode when you want the implementation challenged, not just inspected. The output argues *against* the code. The user decides whether the argument holds.
+
+**Trigger:** user invokes with `--adversarial` flag or asks for adversarial review.
+
+**Questions to answer:**
+
+1. **Wrong abstraction?** Is the chosen abstraction level correct, or does it leak internals / hide too much?
+2. **Tests testing the right thing?** Are tests asserting behavior or implementation details? Would a rewrite break the tests even if behavior is preserved?
+3. **Over-engineered?** Is this solving a problem that doesn't exist yet? What is the simplest version that satisfies the actual requirement?
+4. **Hidden assumption?** What assumption does this code make that, if wrong, causes it to fail entirely?
+5. **Complete rewrite trigger?** What real-world scenario would force a complete rewrite of this approach?
+6. **Early-termination risk?** Is there a reasoning gap in this code that would cause an agent or process to exit early before the task is complete? (e.g., missing error branches that return prematurely, incomplete state machines, loops that exit on the wrong condition)
+
+**Scoring rubric (after answering all questions):**
+
+| Dimension | Score (1-5) | Notes |
+|-----------|-------------|-------|
+| Correctness | | Does the implementation match the stated requirement? |
+| Completeness | | Are all cases handled, or are paths missing? |
+| Feasibility | | Is the approach viable under real-world constraints (load, edge cases, ops burden)? |
+
+Score 1 = fundamentally broken; 5 = no concerns. Scores of 1-2 on any dimension = ARGUMENT HOLDS.
+
+**Nudge step (mandatory):**
+
+After scoring, identify the single assumption in the implementation most likely to be wrong.
+Challenge it explicitly:
+
+```
+Nudge: The implementation assumes [specific assumption]. If this is false, [specific consequence].
+Second-pass question: [one question the author must answer to validate or invalidate this assumption]
+```
+
+**GAA Loop (Generator-Attacker-Analyzer):**
+
+Run adversarial mode as a structured 3-role loop:
+
+1. **Generator** -- the existing implementation (the code under review)
+2. **Attacker** -- the adversarial pass above; finds counterexamples and failure cases
+3. **Analyzer** -- for each surviving challenge, add a specific constraint that closes the gap
+
+Loop until no new counterexample survives (max 2 iterations). On the second loop, if the same challenge reappears unresolved, escalate to BLOCK regardless of original verdict.
+
+**Output format:**
+
+```
+ADVERSARIAL VERDICT: [ARGUMENT HOLDS / ARGUMENT WEAK]
+
+Scores: Correctness [N]/5 | Completeness [N]/5 | Feasibility [N]/5
+
+Challenge 1 — [abstraction / tests / complexity / assumption / fragility / early-termination]:
+[Specific argument against the implementation]
+Evidence: [file:line]
+Analyzer constraint: [what must change to close this gap]
+
+Challenge 2 — ...
+
+Nudge: [assumption] — [consequence if false]
+Second-pass question: [question]
+
+User decision required: Accept / Reject each challenge.
+```
+
+Do not produce both standard and adversarial output in the same run. They are separate passes.
 
 ## Anti-Patterns
 

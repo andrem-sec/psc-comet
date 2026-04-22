@@ -13,17 +13,22 @@ triggers:
 context_files:
   - context/user.md
   - context/learnings.md
+  - context/learnings-index.md
 steps:
+  - name: Write Handoff
+    description: Overwrite context/handoff.md using handoff-template.md as structure — Part 1 completed work, Part 2 open risks and next steps
   - name: Collect Learnings
     description: Review this session's work — what patterns, mistakes, or decisions are worth keeping?
   - name: Quality Gate
     description: Apply the 3-point test to each candidate learning before writing it
-  - name: Update learnings.md
-    description: Append passing entries to context/learnings.md
+  - name: Route Learnings
+    description: Read learnings-index.md for existing tags, present tag options to user, write to context/learnings/[tag].md or main learnings.md if universal
   - name: Update user.md
-    description: Update active goals, completed items, preference changes observed this session
+    description: Only if genuinely new information — diff against existing content before writing
   - name: Commit State
-    description: Check current branch. If on main, present the branch choice prompt before committing. Stage and commit to the chosen destination.
+    description: Check current branch. If on main, present the branch choice prompt before committing. Stage and commit to the chosen destination. Then write the current ISO timestamp to `.claude/context/.wrapup-done` (signals stop-wrap-guard that wrap-up completed).
+  - name: Reflect Check
+    description: Ask user if new patterns or instincts emerged — if yes, invoke /reflect
   - name: Session Summary
     description: Three lines — done, learned, next
 ---

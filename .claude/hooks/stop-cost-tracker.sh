@@ -33,4 +33,8 @@ printf '{"ts":"%s","session_id":"%s","status":"NOT_IMPLEMENTED","note":"Stop hoo
   "$SESSION_ID" \
   >> "$LOG_FILE"
 
+# Signal Claude Code to suppress this hook's output from the conversation.
+# This hook is a stub that writes to a JSONL file only.
+printf '{"suppressOutput":true}\n'
+
 exit 0

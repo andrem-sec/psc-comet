@@ -28,7 +28,7 @@ steps:
   - name: Plan (consensus-plan or plan-first)
     description: Complex or high-risk features → consensus-plan. Simple features → plan-first. Gate before proceeding.
   - name: Implement (tdd)
-    description: Run tdd. Test first. Minimum Green. Then refactor. Checkpoint every 5 steps.
+    description: Run tdd. Test first. Minimum Green. Then refactor. Checkpoint every 5 steps. Before opening the gate, run the test suite and report results as evidence — pass count, fail count, any failures. Do not open the gate on assertion alone.
   - name: Review (code-review)
     description: Run code-review on all changed files. Resolve REQUEST CHANGES before proceeding.
   - name: Security (security-gate)
@@ -93,7 +93,7 @@ Each stage produces an artifact that the next stage consumes:
 | deep-interview | Understood problem (interview summary) | prd uses findings as context |
 | prd | Confirmed acceptance criteria | plan references criteria by number |
 | consensus-plan / plan-first | Approved plan | tdd implements plan steps in order |
-| tdd | Passing tests + implementation | code-review scopes to changed files |
+| tdd | Passing tests + implementation + test run evidence (pass/fail counts) | code-review scopes to changed files |
 | code-review | APPROVE verdict | security-gate scopes to same files |
 | security-gate | PASS verdict | wrap-up closes out |
 

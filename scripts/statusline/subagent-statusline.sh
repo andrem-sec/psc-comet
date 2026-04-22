@@ -15,10 +15,10 @@ fi
 printf '%s' "$input" | jq -r '
     .tasks[]? |
     (.status) as $s |
-    (if   $s == "running"   then "> "
-     elif $s == "completed" then "v "
-     elif $s == "failed"    then "x "
-     else                        ". " end) as $prefix |
+    (if   $s == "running"   then "▶ "
+     elif $s == "completed" then "✓ "
+     elif $s == "failed"    then "✗ "
+     else                        "· " end) as $prefix |
     (.name // "agent") as $name |
     (.description // "") as $desc |
     (.tokenCount // 0) as $tok |

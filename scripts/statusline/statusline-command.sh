@@ -32,7 +32,7 @@ Y='\033[38;2;220;180;0m'
 R='\033[0m'
 DIM='\033[2m'
 BOLD='\033[1m'
-SEP="${DIM}|${R}"
+SEP="${DIM}│${R}"
 
 # -- Context bar (20 blocks, color shifts at 60/80%) --
 ctx_bar() {
@@ -45,13 +45,18 @@ ctx_bar() {
     local i=1
     while [ "$i" -le 20 ]; do
         if [ "$i" -le "$filled" ]; then
-            printf '\033[38;2;%d;%d;%dm#' "$r" "$g" "$b"
+            printf '\033[38;2;%d;%d;%dm█' "$r" "$g" "$b"
         else
-            printf '%b' "${DIM}.${R}"
+            printf '%b' "${DIM}░${R}"
         fi
         i=$(( i + 1 ))
     done
     printf '%b' "$R"
+}
+
+# 🔋 below 80%, ⚡ at or above
+ctx_emoji() {
+    [ "${1:-0}" -ge 80 ] && echo "⚡" || echo "🔋"
 }
 
 # -- Formatters --
@@ -98,7 +103,7 @@ fi
 printf '%b' "${G}(${BOLD}${project}${R}${G})"
 [ -n "$branch" ] && printf '%b' "${G}-[${C}${branch}${G}]${R}" || printf '%b' "$R"
 
-[ -n "$model" ] && printf '%b' "  [m] ${M}${model}${R}"
+[ -n "$model" ] && printf '%b' "  🤖 ${M}${model}${R}"
 
 total=$(( ctx_in + ctx_out ))
 if [ "$total" -gt 0 ] && [ "$ctx_size" -gt 0 ]; then
@@ -107,14 +112,14 @@ fi
 
 if [ -n "$used_pct" ]; then
     used_int=$(printf '%.0f' "$used_pct")
-    if [ "$used_int" -ge 80 ]; then ctx_sym="!"; else ctx_sym="o"; fi
-    printf "  %b  [%s] " "$SEP" "$ctx_sym"
+    emoji=$(ctx_emoji "$used_int")
+    printf "  %b  %s " "$SEP" "$emoji"
     ctx_bar "$used_int"
     printf ' %d%%' "$used_int"
 fi
 
 if [ -n "$agent_count" ] && [ "$agent_count" -gt 0 ] 2>/dev/null; then
-    printf "  %b  [a] %s" "$SEP" "$agent_count"
+    printf "  %b  👾 %s" "$SEP" "$agent_count"
 fi
 
 printf '\n'
@@ -129,13 +134,13 @@ sep2() { $first2 || printf "  %b  " "$SEP"; first2=false; }
 if [ -n "$cost" ]; then
     sep2
     cost_fmt=$(awk -v c="$cost" 'BEGIN { printf "%.3f", c }')
-    printf '%b' "[$] ${Y}\$${cost_fmt}${R}"
+    printf '%b' "💰 ${Y}\$${cost_fmt}${R}"
 fi
 
 if [ -n "$rate_5h" ]; then
     sep2
     r5=$(printf '%.0f' "$rate_5h")
-    printf "[r] 5h: %s%%" "$r5"
+    printf "📊 5h: %s%%" "$r5"
     [ -n "$rate_7d" ] && printf "  7d: %s%%" "$(printf '%.0f' "$rate_7d")"
     if [ -n "$rate_5h_reset" ]; then
         rt=$(fmt_reset "$rate_5h_reset")
@@ -145,19 +150,19 @@ fi
 
 if [ "$lines_add" -gt 0 ] || [ "$lines_rem" -gt 0 ]; then
     sep2
-    printf '[e] '
+    printf '✏️  '
     [ "$lines_add" -gt 0 ] && printf '\033[38;2;0;200;80m+%d%b' "$lines_add" "$R"
     [ "$lines_rem" -gt 0 ] && printf ' \033[38;2;220;60;40m-%d%b' "$lines_rem" "$R"
 fi
 
 if [ "$dur_ms" -gt 0 ]; then
     sep2
-    printf '[t] %s' "$(fmt_dur "$dur_ms")"
+    printf '⏱️  %s' "$(fmt_dur "$dur_ms")"
 fi
 
 if [ -n "$vault_label" ]; then
     sep2
-    printf '[v] %b%s%b' "$C" "$vault_label" "$R"
+    printf '📓 %b%s%b' "$C" "$vault_label" "$R"
 fi
 
 printf '\n'
